@@ -1,2 +1,8 @@
 /venv
+/__pycache__
+/frontend/node_modules
+/frontend/__pycache__
+/frontend/migrations
+/musicapp/__pycache__
+
 env.py
