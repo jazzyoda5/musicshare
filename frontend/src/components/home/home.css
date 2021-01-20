@@ -1,0 +1,16 @@
+.home-div {
+    width: 80vh;
+    height: 80vh;
+    margin: auto;
+    background-color: rgb(71, 71, 88);
+    -moz-box-shadow: 0 0 1px gray;
+    -webkit-box-shadow: 0 0 1px gray;
+    box-shadow: 0 0 1px gray;
+}
+
+.title {
+    width: min-content;
+    margin: auto;
+    color: rgb(225, 226, 230);
+    padding: 12vh;
+}
