@@ -1,4 +1,4 @@
-.home-div {
+.login-form {
     display: block;
     width: 30rem;
     height: 30rem;
@@ -12,20 +12,8 @@
     box-shadow: 0 0 1px gray;
     border-radius: 5px;
 }
-
-.title {
-    width: min-content;
-    margin: auto;
-    padding-top: 6rem;
-    color: rgb(225, 226, 230);
-}
-.buttons {
-    display: flex;
-    width: 70%;
-    margin: auto;
-    margin-top: 5rem;
-    justify-content: space-around;
-}
-.buttons Button {
-    color: rgb(225, 226, 230);
+.login-but {
+    color: rgb(225, 226, 230) !important;
+    background-color: rgb(101, 101, 118) !important;
+    margin-top: 15% !important;
 }
