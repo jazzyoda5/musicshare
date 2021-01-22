@@ -1,0 +1,11 @@
+.signup-form {
+    width: 30rem;
+    max-width: 480px;
+    margin: auto;
+    margin-top: 50px;
+    background-color: rgb(71, 71, 88);
+    -moz-box-shadow: 0 0 1px gray;
+    -webkit-box-shadow: 0 0 1px gray;
+    box-shadow: 0 0 1px gray;
+    border-radius: 5px;
+}

@@ -7,10 +7,7 @@ import {
   TextField,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import "./login_form.css";
-import { connect } from "react-redux";
-import { login } from "../../actions/auth";
-
+import "./signup_form.css";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,23 +31,36 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function getCookie(name) {
+  var cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+      var cookies = document.cookie.split(';');
+      for (var i = 0; i < cookies.length; i++) {
+          var cookie = jQuery.trim(cookies[i]);
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+          }
+      }
+  }
+  return cookieValue;
+}
 
-const LoginForm = ({ login }) => {
+export default function LoginForm(props) {
   const classes = useStyles();
-
   const [username, setUsername] = useState(null);
+  const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
+  const [password2, setPassword2] = useState(null);
 
-  const onSubmit = event => {
-    event.preventDefault();
-    console.log('jakob1');
-    console.log('username ', username, 'password ', password);
-    login(username, password);
+
+  const handleLogin = () => {
+    console.log(username, email, password, password2)
   }
 
   return (
-    <div className="login-form">
-      <FormControl onSubmit={e => onSubmit(e)}>
+    <div className="signup-form">
+      <FormControl>
         <form className={classes.root} noValidate autoComplete="off">
           <div className="header">
             <Typography className={classes.header} variant="h3">
@@ -72,6 +82,20 @@ const LoginForm = ({ login }) => {
             }}
           />
           <TextField
+            className={classes.textInput}
+            id="email"
+            label="Email"
+            variant="filled"
+            required={true}
+            inputProps={{ className: classes.input }}
+            InputLabelProps={{
+              style: { color: "rgb(225, 226, 230)" },
+            }}
+            onChange={event => {
+              setEmail(event.target.value);
+            }}
+          />
+          <TextField
             type="password"
             className={classes.textInput}
             id="filled-basic"
@@ -86,25 +110,34 @@ const LoginForm = ({ login }) => {
               setPassword(event.target.value);
             }}
           />
+          <TextField
+            type="confirm-password"
+            className={classes.textInput}
+            id="filled-basic"
+            label="Confirm Password"
+            variant="filled"
+            required={true}
+            inputProps={{ className: classes.input }}
+            InputLabelProps={{
+              style: { color: "rgb(225, 226, 230)" },
+            }}
+            onChange={event => {
+              setPassword2(event.target.value);
+            }}
+          />
           <Button
             variant="contained"
             className="login-but"
             size="large"
             color="primary"
-            type="submit"
+            onClick={() => {
+              handleLogin();
+            }}
           >
-            Login
+            Create Account
           </Button>
         </form>
       </FormControl>
     </div>
   );
 }
-
-/*
-const mapStateToProps = state => ({
-  // is authenticated
-}); */
-
-
-export default connect(null, { login })(LoginForm);

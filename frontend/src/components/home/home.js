@@ -1,6 +1,7 @@
 import React from "react";
 import { Typography, Button } from "@material-ui/core";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
+import { connect } from 'react-redux';
 import { makeStyles } from "@material-ui/core/styles";
 import "./home.css";
 
@@ -35,9 +36,11 @@ export default function Home(props) {
           size="large"
           variant="outlined"
           className={classes.button}
+          component={Link}
+          to="signup/"
           style={{ color: "rgb(225, 226, 230)" }}
         >
-          Register
+          Sign Up
         </Button>
       </div>
     </div>
