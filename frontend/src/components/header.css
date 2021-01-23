@@ -1,0 +1,12 @@
+.nav { 
+    display: flex;
+    margin: auto;
+    background-color: rgb(89, 89, 102);
+    height: 5rem;
+    padding-inline: 5rem;
+    justify-content: space-between;
+    align-items: center;
+}
+.header-options {
+    margin: 0;
+}

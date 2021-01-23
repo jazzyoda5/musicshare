@@ -1,5 +1,7 @@
 import React from "react";
 import { useState } from "react";
+import { Link, Redirect } from 'react-router-dom';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {
   FormControl,
   Button,
@@ -16,8 +18,9 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: "block",
     padding: "7vh",
+    paddingTop: '0'
   },
-  header: {
+  title: {
     color: "rgb(225, 226, 230)",
   },
   textInput: {
@@ -35,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const LoginForm = ({ login }) => {
+const LoginForm = ({ login, isAuthenticated }) => {
   const classes = useStyles();
 
   const [username, setUsername] = useState(null);
@@ -48,12 +51,19 @@ const LoginForm = ({ login }) => {
     login(username, password);
   }
 
+  if (isAuthenticated) {
+    return (<Redirect to='/feed' />)
+  }
   return (
     <div className="login-form">
+      <Button component={Link} to="/" 
+      startIcon={<ArrowBackIcon style={{ fontSize: '3rem', 
+      color: 'rgba(225, 226, 230, 0.4)', marginRight: '-0.7rem' }}/>}
+      style={{ display: 'flex', width: 'fit-content', marginLeft: '1rem' }}></Button>
       <FormControl onSubmit={e => onSubmit(e)}>
         <form className={classes.root} noValidate autoComplete="off">
           <div className="header">
-            <Typography className={classes.header} variant="h3">
+            <Typography className={classes.title} variant="h2">
               hang
             </Typography>
           </div>
@@ -101,10 +111,10 @@ const LoginForm = ({ login }) => {
   );
 }
 
-/*
+
 const mapStateToProps = state => ({
-  // is authenticated
-}); */
+  isAuthenticated: state.auth.isAuthenticated
+});
 
 
-export default connect(null, { login })(LoginForm);
+export default connect(mapStateToProps, { login })(LoginForm);

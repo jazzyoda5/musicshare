@@ -1,5 +1,7 @@
 import React from "react";
 import { useState } from "react";
+import { Link } from 'react-router-dom';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {
   FormControl,
   Button,
@@ -13,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: "block",
     padding: "7vh",
+    paddingTop: '0'
   },
   header: {
     color: "rgb(225, 226, 230)",
@@ -60,10 +63,14 @@ export default function LoginForm(props) {
 
   return (
     <div className="signup-form">
+      <Button component={Link} to="/" 
+      startIcon={<ArrowBackIcon style={{ fontSize: '3rem', 
+      color: 'rgba(225, 226, 230, 0.4)', marginRight: '-0.7rem' }}/>}
+      style={{ display: 'flex', width: 'fit-content', marginLeft: '1rem' }}></Button>
       <FormControl>
         <form className={classes.root} noValidate autoComplete="off">
           <div className="header">
-            <Typography className={classes.header} variant="h3">
+            <Typography className={classes.header} variant="h2">
               hang
             </Typography>
           </div>

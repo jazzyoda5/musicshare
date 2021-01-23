@@ -4,5 +4,8 @@
 /frontend/__pycache__
 /frontend/migrations
 /musicapp/__pycache__
+/api/__pycache__
+/accounts/__pycache__
 
 env.py
+todo.txt

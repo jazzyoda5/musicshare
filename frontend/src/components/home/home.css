@@ -5,25 +5,31 @@
     max-width: 480px;
     max-height: 480px;
     margin: auto;
-    margin-top: 50px;
+    margin-top: 4rem;
+    text-align: center;
+
     background-color: rgb(71, 71, 88);
     -moz-box-shadow: 0 0 1px gray;
     -webkit-box-shadow: 0 0 1px gray;
     box-shadow: 0 0 1px gray;
     border-radius: 5px;
 }
+.description {
+    margin-top: 2rem;
+    padding: 1rem;
+}
 
 .title {
     width: min-content;
     margin: auto;
-    padding-top: 6rem;
+    padding-top: 4.5rem;
     color: rgb(225, 226, 230);
 }
 .buttons {
     display: flex;
     width: 70%;
     margin: auto;
-    margin-top: 5rem;
+    margin-top: 2rem;
     justify-content: space-around;
 }
 .buttons Button {

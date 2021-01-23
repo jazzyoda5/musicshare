@@ -21,6 +21,14 @@ export default function Home(props) {
           hang
         </Typography>
       </div>
+      <div className="description">
+        <Typography variant="h5" component="h5"
+        style={{
+          color: 'rgba(225, 226, 230, 0.6)'
+        }}>
+            A hip social platform. Squares not allowed.
+        </Typography>
+      </div>
       <div className="buttons">
         <Button
           size="large"
