@@ -1,11 +1,16 @@
 import React from "react";
 import "./feed.css";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { Redirect } from "react-router-dom";
+import { connect } from 'react-redux';
 import Header from '../header';
 
 
-const Feed = (props) => {
+const Feed = ({ isAuthenticated }) => {
+  console.log('isAuth: ', isAuthenticated);
 
+  if (isAuthenticated !== true) {
+    return (<Redirect to="/login" />);
+  }
   return (
     <div className="feed">
         <Header />
@@ -14,4 +19,8 @@ const Feed = (props) => {
   );
 }
 
-export default Feed;
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect(mapStateToProps)(Feed);

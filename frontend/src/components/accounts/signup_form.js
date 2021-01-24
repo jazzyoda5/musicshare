@@ -1,6 +1,8 @@
 import React from "react";
 import { useState } from "react";
-import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { signup } from '../../actions/auth';
+import { Link, Redirect } from 'react-router-dom';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {
   FormControl,
@@ -34,32 +36,35 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function getCookie(name) {
-  var cookieValue = null;
-  if (document.cookie && document.cookie !== '') {
-      var cookies = document.cookie.split(';');
-      for (var i = 0; i < cookies.length; i++) {
-          var cookie = jQuery.trim(cookies[i]);
-          if (cookie.substring(0, name.length + 1) === (name + '=')) {
-              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-              break;
-          }
-      }
-  }
-  return cookieValue;
-}
 
-export default function LoginForm(props) {
+const SignupForm = ({ signup, isAuthenticated }) => {
   const classes = useStyles();
   const [username, setUsername] = useState(null);
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const [password2, setPassword2] = useState(null);
 
+  const [accountCreated, setAccoutnCreated] = useState(false);
+  const [passwordMismatch, setPasswordMismatch] = useState(false);
 
-  const handleLogin = () => {
-    console.log(username, email, password, password2)
+
+  const handleSignup = () => {
+    if (password === password2) {
+      signup(email, username, password, password2);
+      setAccoutnCreated(true);
+    } else {
+      setPasswordMismatch(true);
+    }
   }
+
+  if (isAuthenticated) {
+    return (<Redirect to='/feed' />);
+  }
+
+  if (accountCreated) {
+    return (<Redirect to='/login' />);
+  }
+
 
   return (
     <div className="signup-form">
@@ -76,7 +81,7 @@ export default function LoginForm(props) {
           </div>
           <TextField
             className={classes.textInput}
-            id="password"
+            id="username"
             label="Username"
             variant="filled"
             required={true}
@@ -105,7 +110,7 @@ export default function LoginForm(props) {
           <TextField
             type="password"
             className={classes.textInput}
-            id="filled-basic"
+            id="password"
             label="Password"
             variant="filled"
             required={true}
@@ -117,10 +122,28 @@ export default function LoginForm(props) {
               setPassword(event.target.value);
             }}
           />
+          {passwordMismatch ?
           <TextField
-            type="confirm-password"
+          error
+          helperText='Passwords do not match.'
+          type="password"
+          className={classes.textInput}
+          id="confirm-password"
+          label="Confirm Password"
+          variant="filled"
+          required={true}
+          inputProps={{ className: classes.input }}
+          InputLabelProps={{
+            style: { color: "rgb(225, 226, 230)" },
+          }}
+          onChange={event => {
+            setPassword2(event.target.value);
+          }}
+        />:
+        <TextField
+            type="password"
             className={classes.textInput}
-            id="filled-basic"
+            id="confirm-password"
             label="Confirm Password"
             variant="filled"
             required={true}
@@ -131,14 +154,14 @@ export default function LoginForm(props) {
             onChange={event => {
               setPassword2(event.target.value);
             }}
-          />
+          />}
           <Button
             variant="contained"
             className="login-but"
             size="large"
             color="primary"
             onClick={() => {
-              handleLogin();
+              handleSignup();
             }}
           >
             Create Account
@@ -148,3 +171,9 @@ export default function LoginForm(props) {
     </div>
   );
 }
+
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect(mapStateToProps, { signup })(SignupForm);

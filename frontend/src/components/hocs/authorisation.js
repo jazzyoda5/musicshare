@@ -9,7 +9,6 @@ const Authorisation = (props) => {
     useEffect(() => {
         props.checkAuthenticated();
         props.load_user();
-        console.log('isAuthenticated: ', localStorage.getItem('isAuthenticated'));
     }, []);
 
     return (
@@ -18,5 +17,10 @@ const Authorisation = (props) => {
         </div>
     );
 }
+
+const mapStateToProps = state => ({
+    isAuthenticated: state.auth.isAuthenticated
+  });
+
 
 export default connect(null, { checkAuthenticated, load_user })(Authorisation);

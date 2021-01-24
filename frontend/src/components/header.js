@@ -5,6 +5,8 @@ import {
     Button
 } from '@material-ui/core';
 import { makeStyles } from "@material-ui/core/styles";
+import { logout } from '../actions/auth';
+import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
@@ -20,8 +22,12 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 
-const Header = (props) => {
-    const classes = useStyles();
+const Header = ({ logout }) => {
+  const classes = useStyles();
+
+  function handleLogout() {
+      logout();
+  }
 
   return (
     <div className="nav">
@@ -34,10 +40,14 @@ const Header = (props) => {
             style={{ display: 'inline-block' }}
             size='large'
             variant="contained"
-            color="primary">Logout</Button>
+            color="primary"
+            onClick={() => handleLogout()}
+            component={Link}
+            to='/'>Logout</Button>
         </div>
     </div>
   );
 }
 
-export default Header;
+
+export default connect(null, { logout })(Header);
