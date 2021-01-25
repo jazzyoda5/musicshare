@@ -6,6 +6,7 @@
 /musicapp/__pycache__
 /api/__pycache__
 /accounts/__pycache__
+/rooms/__pycache__
 
 env.py
 todo.txt
