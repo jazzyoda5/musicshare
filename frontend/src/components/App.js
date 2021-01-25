@@ -6,6 +6,7 @@ import Home from "./home/home.js";
 import LoginForm from "./accounts/login_form";
 import SignupForm from "./accounts/signup_form";
 import Authorisation from './hocs/authorisation';
+import CreateRoomForm from './feed/create_room.js';
 
 import { Provider } from "react-redux";
 import store from "../store";

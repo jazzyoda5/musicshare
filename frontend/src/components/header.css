@@ -4,6 +4,9 @@
     background-color: rgb(89, 89, 102);
     height: 5rem;
     padding-inline: 5rem;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: rgb(129, 129, 152);
     justify-content: space-between;
     align-items: center;
 }

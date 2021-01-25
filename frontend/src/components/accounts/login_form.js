@@ -52,6 +52,7 @@ const LoginForm = ({ login, isAuthenticated }) => {
   }
 
   if (isAuthenticated) {
+    console.log('redirect to feed');
     return (<Redirect to='/feed' />)
   }
   return (

@@ -32,7 +32,6 @@ export default function Home(props) {
       <div className="buttons">
         <Button
           size="large"
-          variant="outlined"
           className={classes.button}
           component={Link}
           to="login/"
@@ -42,7 +41,6 @@ export default function Home(props) {
         </Button>
         <Button
           size="large"
-          variant="outlined"
           className={classes.button}
           component={Link}
           to="signup/"

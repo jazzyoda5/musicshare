@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'djoser',
     'frontend.apps.FrontendConfig',
-    'api.apps.ApiConfig'
+    'accounts.apps.AccountsConfig',
+    'rooms.apps.RoomsConfig'
 ]
 
 MIDDLEWARE = [
@@ -110,10 +111,11 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated'
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
 }
 
+"""
 SIMPLE_JWT = {
    'AUTH_HEADER_TYPES': ('JWT',),
 }
@@ -126,14 +128,14 @@ DJOSER = {
         'user_delete': 'djoser.serializers.UserDeleteSerializer',
     }
 }
-
+"""
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Etc/GMT-1'
 
 USE_I18N = True
 
@@ -146,3 +148,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+CORS_ORIGIN_ALLOW_ALL = True

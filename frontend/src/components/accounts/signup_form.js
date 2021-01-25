@@ -12,6 +12,7 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import "./signup_form.css";
+import CSRFToken from '../../csrf_token';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -74,6 +75,7 @@ const SignupForm = ({ signup, isAuthenticated }) => {
       style={{ display: 'flex', width: 'fit-content', marginLeft: '1rem' }}></Button>
       <FormControl>
         <form className={classes.root} noValidate autoComplete="off">
+          <CSRFToken />
           <div className="header">
             <Typography className={classes.header} variant="h2">
               hang
@@ -176,4 +178,4 @@ const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated
 });
 
-export default connect(mapStateToProps, { signup })(SignupForm);
+export default connect(null, { signup })(SignupForm);

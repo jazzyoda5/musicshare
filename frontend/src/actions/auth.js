@@ -10,7 +10,9 @@ import {
     SIGNUP_SUCCESS
 } from './types';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
+/*
 export const checkAuthenticated = () => async dispatch => {
     if ( localStorage.getItem('access')) {
         const config = {
@@ -46,8 +48,8 @@ export const checkAuthenticated = () => async dispatch => {
             type: AUTHENTICATED_FAIL
         });
     }
-}
-
+} */
+/*
 export const load_user = () => async dispatch => {
     if (localStorage.getItem('access')) {
         const config = {
@@ -107,24 +109,32 @@ export const logout = () => dispatch => {
         type: LOGOUT
     });
 };
-
+*/
 export const signup = (email, username, password, re_password) => async dispatch => {
     console.log('jakob2');
 
     const config = {
         headers: {
-            'Content-Type': 'application/json'
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'X-CSRFToken': Cookies.get('csrftoken')
         }
     };
 
-    const body = JSON.stringify({ email, username, password, re_password });
-
+    const body = JSON.stringify({ email, username, password });
+ 
     try {
-        const res = await axios.post(`http://localhost:8000/auth/users/`, body, config);
-        dispatch({
-            type: SIGNUP_SUCCESS,
-            payload: res.data
-        });
+        const res = await axios.post(`http://localhost:8000/accounts/create/`, body, config);
+        if (res.data.error) {
+            dispatch({
+                type: SIGNUP_FAIL
+            })
+        } else {
+            dispatch({
+                type: SIGNUP_SUCCESS,
+                payload: res.data
+            });
+        }
 
     } catch (err) {
         console.log(err);
