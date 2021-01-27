@@ -1,24 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link, withRouter } from 'react-router-dom';
+import axios from 'axios';
 import "./create_room.css";
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  OutlinedInput,
-  Container,
-} from "@material-ui/core";
+import { FormControl, Select, MenuItem } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { Redirect } from "react-router-dom";
-import { connect, useSelector } from "react-redux";
-import Header from "../header";
+import CSRFToken from "../../csrf_token";
+import Cookies from "js-cookie";
+
 
 const useStyles = makeStyles({
   root: {
@@ -57,12 +50,41 @@ const useStyles = makeStyles({
   },
   container: {
     backgroundColor: "rgb(101, 101, 118)",
-    color: 'white'
+    color: "white",
   },
 });
 
 const CreateRoomForm = (props) => {
+  const [roomName, setRoomName] = useState('');
+  const [roomAccess, setRoomAccess] = useState('');
+  const [roomPath, setRoomPath] = useState('');
+
   const classes = useStyles();
+
+  const handleCreateRoom = () => {
+    const config = {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "X-CSRFToken": Cookies.get("csrftoken"),
+      },
+    };
+
+    const body = JSON.stringify({
+      withCredentials: true,
+      name: roomName,
+      access: roomAccess
+    });
+
+    axios.post(`${process.env.API_URL}/api/rooms/create/`, body, config)
+      .then(response => {
+        console.log(response.data);
+        if (response.data.room_id) {
+          props.history.push('/publicroom/' + response.data.room_id)
+        }
+      })
+      .catch(err => {console.log(err);});
+  };
 
   return (
     <div className="createroom">
@@ -77,9 +99,10 @@ const CreateRoomForm = (props) => {
         <DialogTitle id="form-dialog-title" className={classes.container}>
           Create a room
         </DialogTitle>
-        <DialogContent style={{ backgroundColor: 'rgb(101, 101, 118)'}}>
-          <FormControl style={{ width: '100%' }}>
+        <DialogContent style={{ backgroundColor: "rgb(101, 101, 118)" }}>
+          <FormControl style={{ width: "100%" }}>
             <form noValidate autoComplete="off">
+              <CSRFToken />
               <TextField
                 className={classes.textInput}
                 id="name"
@@ -91,7 +114,7 @@ const CreateRoomForm = (props) => {
                   style: { color: "rgb(225, 226, 230)" },
                 }}
                 onChange={(event) => {
-                  setUsername(event.target.value);
+                  setRoomName(event.target.value);
                 }}
               />
               <Select
@@ -101,25 +124,26 @@ const CreateRoomForm = (props) => {
                 variant="filled"
                 required={true}
                 inputProps={{ className: classes.input }}
+                onChange={(event) => setRoomAccess(event.target.value)}
                 InputLabelProps={{
                   style: { color: "rgb(225, 226, 230)" },
                 }}
               >
-                <MenuItem value='Private'>Private</MenuItem>
-                <MenuItem value='Public'>Public</MenuItem>
+                <MenuItem value="Private">Private</MenuItem>
+                <MenuItem value="Public">Public</MenuItem>
               </Select>
               <Button
-            onClick={props.handleCreateRoomClose}
-            style={{ color: "white", marginTop: '20px', float: 'right' }}
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={props.handleCreateRoomClose}
-            style={{ color: "white", marginTop: '20px', float: 'right' }}
-          >
-            CREATE
-          </Button>
+                onClick={props.handleCreateRoomClose}
+                style={{ color: "white", marginTop: "20px", float: "right" }}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => handleCreateRoom()}
+                style={{ color: "white", marginTop: "20px", float: "right" }}
+              >
+                CREATE
+              </Button>
             </form>
           </FormControl>
         </DialogContent>
@@ -128,4 +152,4 @@ const CreateRoomForm = (props) => {
   );
 };
 
-export default CreateRoomForm;
+export default withRouter(CreateRoomForm);

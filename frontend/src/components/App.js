@@ -7,6 +7,7 @@ import LoginForm from "./accounts/login_form";
 import SignupForm from "./accounts/signup_form";
 import PrivateRoute from './hocs/private_route';
 import Layout from "./hocs/authorisation";
+import Room from './room';
 
 import { Provider } from "react-redux";
 import store from "../store";
@@ -26,6 +27,7 @@ export default function App(props) {
               <Home />
             </Route>
           <Layout>
+          <PrivateRoute exact path="/publicroom/:room_id" component={Room} />
             <PrivateRoute exact path="/feed" component={Feed} />
           </Layout>
         </Switch>

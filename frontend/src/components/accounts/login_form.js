@@ -56,6 +56,7 @@ const LoginForm = ({ login, isAuthenticated }) => {
     console.log('logged in. redirect to feed.');
     return (<Redirect to='/feed' />)
   }
+  
   return (
     <div className="login-form">
       <Button component={Link} to="/" 

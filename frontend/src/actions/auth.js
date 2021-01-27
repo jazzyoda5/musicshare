@@ -25,7 +25,7 @@ export const checkAuthenticated = () => async dispatch => {
     };
 
     try {
-        const res = await axios.get(`http://localhost:8000/accounts/authenticate/`, config);
+        const res = await axios.get(`${process.env.API_URL}/accounts/authenticate/`, config);
         console.log('res.data: ', res.data);
 
         if (res.data.error || res.data.isAuthenticated === 'error') {
@@ -65,7 +65,7 @@ export const login = (username, password) => async dispatch => {
     const body = JSON.stringify({ username, password });
 
     try {
-        const res = await axios.post(`http://localhost:8000/accounts/login/`, body, config);
+        const res = await axios.post(`${process.env.API_URL}/accounts/login/`, body, config);
         console.log('res.data: ', res.data);
 
         if (res.data.success) {
@@ -104,7 +104,7 @@ export const logout = () => async dispatch => {
     });
 
     try {
-        const res = await axios.post(`http://localhost:8000/accounts/logout/`, body, config);
+        const res = await axios.post(`${process.env.API_URL}/accounts/logout/`, body, config);
         
         if (res.data.success) {
             dispatch({
@@ -140,7 +140,7 @@ export const signup = (email, username, password, re_password) => async dispatch
     const body = JSON.stringify({ email, username, password });
  
     try {
-        const res = await axios.post(`http://localhost:8000/accounts/create/`, body, config);
+        const res = await axios.post(`${process.env.API_URL}/accounts/create/`, body, config);
         if (res.data.error) {
             dispatch({
                 type: SIGNUP_FAIL

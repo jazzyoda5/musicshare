@@ -5,27 +5,16 @@ import { checkAuthenticated, load_user } from '../../actions/auth';
 import Header from '../header';
 
 
-const Layout = (props) => {
-    const [redirect_to_login, set_redirect_to_login] = useState(false);
-    const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
-
+const Layout = ({ children, checkAuthenticated }) => {
 
     useEffect(() => {
-        props.checkAuthenticated();
-        console.log('auth : ', isAuthenticated);
-        if (isAuthenticated === false) {
-            set_redirect_to_login(true);
-        }
-    }, [ isAuthenticated ]);
-
-    if (redirect_to_login) {
-        return (<Redirect to='/login' />);
-    }
+        checkAuthenticated();
+    }, []);
 
     return (
         <Fragment>
             <Header />
-            {props.children}
+            {children}
         </Fragment>
     );
 }

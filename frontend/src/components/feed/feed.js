@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from 'axios';
 import "./feed.css";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
@@ -41,8 +42,12 @@ const Feed = (props) => {
   const [openNewRoomForm, setOpenNewRoomForm] = useState(false);
   console.log(openNewRoomForm);
 
-  const handleCreateRoom = () => {
+  const openCreateRoomForm = () => {
     setOpenNewRoomForm(true);
+  }
+
+  const handleCreateRoom = (name, access) => {
+    console.log(name, access);
   }
 
   const handleCreateRoomClose = () => {
@@ -80,7 +85,7 @@ const Feed = (props) => {
               color="primary"
               variant="contained"
               className={classes.button}
-              onClick={() => handleCreateRoom()}
+              onClick={() => openCreateRoomForm()}
             >
               Create a hang
             </Button>
@@ -171,4 +176,4 @@ const Feed = (props) => {
 };
 
 
-export default connect(null)(Feed);
+export default Feed;
