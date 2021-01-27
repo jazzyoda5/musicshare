@@ -3,6 +3,7 @@ from rest_framework import status, viewsets, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth.models import User
+from django.contrib import auth
 from django.http import HttpResponse
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 from django.utils.decorators import method_decorator
@@ -19,7 +20,7 @@ class CreateUserView(APIView):
         password = data['password']
         email = data['email']
 
-        if User.objects.filter(username=username).exists():
+        if User.objects.filter(username=username).exists() or User.objects.filter(email=email).exists():
             return Response({ 'error': 'Username already exists'})
         
         else:
@@ -40,3 +41,61 @@ class GetCSRFToken(APIView):
     def get(self, request, format=None):
         return Response({ 'success': 'CSRF cookie set'})
 
+
+@method_decorator(csrf_protect, name='dispatch')
+class LoginView(APIView):
+    permission_classes = [permissions.AllowAny, ]
+
+    def post(self, request, format=None):
+        data = self.request.data
+
+        username = data['username']
+        password = data['password']
+
+        try:
+            user = auth.authenticate(username=username, password=password)
+
+            if user is not None:
+                auth.login(request, user)
+                print('[LOGIN] User authenticated.')
+                response_data = {
+                    'success': 'User authenticated',
+                    'username': username
+                }
+                return Response(response_data)
+            
+            else:
+                print('[LOGIN] Not authenticated.')
+                return Response({ 'error': 'Error authenticating' })
+        
+        except:
+            print('[LOGIN] Something went wrong..')
+            return Response({ 'error': 'Something went wrong' })
+
+
+class LogoutView(APIView):
+    permission_classes = [permissions.IsAuthenticated, ]
+    def post(self, request, format=None):
+        try:
+            auth.logout(request)
+            print('[LOGOUT] Success.')
+            return Response({ 'success': 'Logged out.' })
+        except:
+            print('[LOGOUT] Fail.')
+            return Response({ 'error': 'Logout failed.' })
+
+
+@method_decorator(csrf_protect, name='dispatch')
+class CheckAuthenticated(APIView):
+    def get(self, request, format=None):
+        user = self.request.user
+
+        try:
+            isAuthenticated = user.is_authenticated
+
+            if isAuthenticated:
+                return Response({ 'isAuthenticated': 'success' })
+            else:
+                return Response({ 'isAuthenticated': 'error' })
+        except:
+            return Response({ 'error': 'Something went wrong when checking authentication status' })

@@ -12,6 +12,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import "./login_form.css";
 import { connect } from "react-redux";
 import { login } from "../../actions/auth";
+import CSRFToken from '../../csrf_token';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -52,7 +53,7 @@ const LoginForm = ({ login, isAuthenticated }) => {
   }
 
   if (isAuthenticated) {
-    console.log('redirect to feed');
+    console.log('logged in. redirect to feed.');
     return (<Redirect to='/feed' />)
   }
   return (
@@ -63,6 +64,7 @@ const LoginForm = ({ login, isAuthenticated }) => {
       style={{ display: 'flex', width: 'fit-content', marginLeft: '1rem' }}></Button>
       <FormControl onSubmit={e => onSubmit(e)}>
         <form className={classes.root} noValidate autoComplete="off">
+          <CSRFToken />
           <div className="header">
             <Typography className={classes.title} variant="h2">
               hang

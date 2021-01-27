@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { checkAuthenticated, load_user } from '../../actions/auth';
+import Header from '../header';
 
 
-const Authorisation = (props) => {
+const Layout = (props) => {
     const [redirect_to_login, set_redirect_to_login] = useState(false);
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
 
 
     useEffect(() => {
         props.checkAuthenticated();
-        props.load_user();
         console.log('auth : ', isAuthenticated);
         if (isAuthenticated === false) {
             set_redirect_to_login(true);
@@ -23,14 +23,12 @@ const Authorisation = (props) => {
     }
 
     return (
-        <div style={{ height: '100%' }}>
+        <Fragment>
+            <Header />
             {props.children}
-        </div>
+        </Fragment>
     );
 }
 
 
-
-
-
-export default connect(null, { checkAuthenticated, load_user })(Authorisation);
+export default connect(null, { checkAuthenticated })(Layout);

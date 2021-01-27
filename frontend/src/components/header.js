@@ -8,6 +8,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { logout } from '../actions/auth';
 import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
+import CSRFToken from '../csrf_token';
 
 const useStyles = makeStyles((theme) => ({
     button: {
@@ -35,6 +36,7 @@ const Header = ({ logout }) => {
         style={{ color: 'rgb(225, 226, 230)',
         display: 'inline-block' }}>hang</Typography>
         <div className="header-options">
+            <CSRFToken />
             <Button
             className={classes.button}
             style={{ display: 'inline-block' }}

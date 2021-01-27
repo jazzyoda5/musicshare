@@ -115,20 +115,6 @@ REST_FRAMEWORK = {
     ),
 }
 
-"""
-SIMPLE_JWT = {
-   'AUTH_HEADER_TYPES': ('JWT',),
-}
-
-DJOSER = {
-    'USER_CREATE_PASSWORD_RETYPE': True,
-    'SERIALIZERS': {
-        'user_create': 'accounts.serializers.UserCreateSerializer',
-        'user': 'accounts.serializers.UserCreateSerializer',
-        'user_delete': 'djoser.serializers.UserDeleteSerializer',
-    }
-}
-"""
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/

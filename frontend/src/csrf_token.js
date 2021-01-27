@@ -25,7 +25,7 @@ const CSRFToken = () => {
             try {
                 await axios.get('http://localhost:8000/accounts/csrf_cookie/')
             } catch (err) {
-
+                console.log('No csrf cookie. ', err);
             }
         }
 

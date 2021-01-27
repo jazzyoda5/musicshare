@@ -10,7 +10,6 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { Link } from "react-router-dom";
 import { connect, useSelector } from "react-redux";
-import Header from "../header";
 import CreateRoomForm from './create_room.js';
 
 const useStyles = makeStyles({
@@ -37,10 +36,11 @@ const useStyles = makeStyles({
   }
 });
 
-const Feed = ({ isAuthenticated, user }) => {
+const Feed = (props) => {
   const classes = useStyles();
   const [openNewRoomForm, setOpenNewRoomForm] = useState(false);
   console.log(openNewRoomForm);
+
   const handleCreateRoom = () => {
     setOpenNewRoomForm(true);
   }
@@ -49,12 +49,8 @@ const Feed = ({ isAuthenticated, user }) => {
     setOpenNewRoomForm(false)
   }
 
-
-
-
   return (
     <div className="feed">
-      <Header />
       <div className="feed-menu">
         <Card className={classes.root}>
           <CardActionArea>
@@ -174,9 +170,5 @@ const Feed = ({ isAuthenticated, user }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  isAuthenticated: state.auth.isAuthenticated,
-  user: state.auth.user,
-});
 
-export default connect(mapStateToProps)(Feed);
+export default connect(null)(Feed);

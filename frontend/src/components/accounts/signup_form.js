@@ -178,4 +178,4 @@ const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated
 });
 
-export default connect(null, { signup })(SignupForm);
+export default connect(mapStateToProps, { signup })(SignupForm);
