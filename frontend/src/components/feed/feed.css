@@ -1,5 +1,5 @@
 .feed {
-    height: 100%;
+    padding: 2rem
 }
 .feed-menu {
     display: grid;
@@ -8,6 +8,5 @@
     max-width: 1000px;
     min-height: max-content;
     margin: auto;
-    margin-top: 4rem;
     text-align: center;
 }

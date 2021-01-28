@@ -2,22 +2,28 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { makeStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
+import { Box } from '@material-ui/core';
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { Link, useRouteMatch } from "react-router-dom";
 import { connect, useSelector } from "react-redux";
-import CSRFToken from "../csrf_token";
+import CSRFToken from "../../csrf_token";
+import LeftRoomNav from './left_nav';
+import Chat from './chat';
+import './room.css';
 
 const useStyles = makeStyles({
-
+  box: {
+    display: 'grid',
+    gridTemplateColumns: '30% 70%',
+    height: '100%',
+    maxWidth: '1300px',
+    margin: 'auto',
+  }
 });
 
 const Room = (props) => {
+  const classes = useStyles();
   let match = useRouteMatch();
   const [roomId, setRoomId] = useState(match.params.room_id);
   const [roomName, setRoomName] = useState('');
@@ -50,10 +56,10 @@ const Room = (props) => {
   return (
     <div className="room">
         <CSRFToken />
-        <h1>Room</h1>
-        <h3>{roomId}</h3>
-        <h3>{roomName}</h3>
-        <h3>{roomCreator}</h3>
+        <Box component="div" m={1} className={classes.box}>
+          <LeftRoomNav roomName={roomName}/>
+          <Chat />
+        </Box>
     </div>
   );
 };

@@ -2,7 +2,7 @@
     display: block;
     width: 30rem;
     height: 30rem;
-    max-width: 480px;
+    max-width: 100vh;
     max-height: 480px;
     margin: auto;
     margin-top: 4rem;
