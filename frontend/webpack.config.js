@@ -34,6 +34,7 @@ module.exports = {
         // This has effect on the react lib size
         NODE_ENV: JSON.stringify("production"),
         API_URL: JSON.stringify('http://localhost:8000'),
+        SOCKET_URL: JSON.stringify('ws://localhost:8000'),
       },
     }),
   ],

@@ -5,10 +5,12 @@ import { checkAuthenticated, load_user } from '../../actions/auth';
 import Header from '../header';
 
 
-const Layout = ({ children, checkAuthenticated }) => {
+const Layout = ({ children, checkAuthenticated, load_user }) => {
 
     useEffect(() => {
         checkAuthenticated();
+        load_user();
+
     }, []);
 
     return (
@@ -20,4 +22,4 @@ const Layout = ({ children, checkAuthenticated }) => {
 }
 
 
-export default connect(null, { checkAuthenticated })(Layout);
+export default connect(null, { checkAuthenticated, load_user })(Layout);

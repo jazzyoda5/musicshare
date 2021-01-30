@@ -3,10 +3,12 @@
 }
 .feed-menu {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fill, 400px);
     height: 100%;
+    width: 100%;
     max-width: 1000px;
     min-height: max-content;
     margin: auto;
     text-align: center;
+    justify-content: center;
 }

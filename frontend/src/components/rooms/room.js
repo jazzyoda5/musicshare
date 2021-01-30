@@ -25,12 +25,33 @@ const useStyles = makeStyles({
 const Room = (props) => {
   const classes = useStyles();
   let match = useRouteMatch();
+
   const [roomId, setRoomId] = useState(match.params.room_id);
   const [roomName, setRoomName] = useState('');
   const [roomCreator, setRoomCreator] = useState('');
+  const [participants, setParticipants] = useState([]);
+  const [messages, setMessages] = useState({});
+
+  const socket = new WebSocket(`${process.env.SOCKET_URL}/ws/${roomId}/`)
   
   useEffect(() => {
+    getRoomData();
+
+    socket.onopen = function(e) {
+      console.log('[SOCKET] Connected.')
+    }
     
+    socket.onmessage = event => {
+      console.log('[SOCKET] Message recieved.');
+    }
+
+    socket.onclose = function(e) {
+      console.error('[SOCKET] Disconnected unexpectedly.');
+    }
+
+  }, [])
+
+  const getRoomData = () => {
     const config = {
         headers: {
             'Accept': 'application/json',
@@ -50,8 +71,13 @@ const Room = (props) => {
         setRoomName(response.data.room_name);
       })
       .catch(err => {console.log(err);});
-  }, [])
+  }
 
+  const sendMessage = () => {
+    socket.send(JSON.stringify({
+      'message': 'Hey bruv'
+    }));
+  }
 
   return (
     <div className="room">
@@ -60,6 +86,7 @@ const Room = (props) => {
           <LeftRoomNav roomName={roomName}/>
           <Chat />
         </Box>
+        <button onClick={() => sendMessage()}>Send</button>
     </div>
   );
 };

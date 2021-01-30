@@ -4,8 +4,6 @@ import { connect } from 'react-redux';
 import Loader from '../loader';
 
 const PrivateRoute = ({ component: Component, isAuthenticated, ...rest }) => {
-    console.log('is authenticated, layout: ', isAuthenticated);
-
     if (isAuthenticated === null) {
         return (<Loader />)
     }

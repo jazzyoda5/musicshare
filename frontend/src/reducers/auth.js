@@ -38,12 +38,18 @@ export default function (state = initialState, action) {
         isAuthenticated: true,
         username: payload.username
       };
+    case USER_LOADED_SUCCESS:
+      return {
+        ...state,
+        username: payload.username
+      };
     case LOGOUT_SUCCESS:
       return {
         ...state,
         isAuthenticated: false,
         username: ''
       };
+    case USER_LOADED_FAIL:
     case LOGIN_FAIL:
     case SIGNUP_FAIL:
       return state;

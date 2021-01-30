@@ -26,7 +26,7 @@ export default function App(props) {
               <Home />
             </Route>
           <Layout>
-          <PrivateRoute exact path="/publicroom/:room_id" component={Room} />
+            <PrivateRoute exact path="/publicroom/:room_id" component={Room} />
             <PrivateRoute exact path="/feed" component={Feed} />
           </Layout>
         </Switch>

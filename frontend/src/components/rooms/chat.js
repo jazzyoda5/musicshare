@@ -14,6 +14,8 @@ import Typography from "@material-ui/core/Typography";
 import { Link, useRouteMatch } from "react-router-dom";
 import { connect, useSelector } from "react-redux";
 import CSRFToken from "../../csrf_token";
+import MessageWindow from './message_window';
+
 
 const useStyles = makeStyles({
   mainInputDiv: {
@@ -94,10 +96,12 @@ const CssTextField = withStyles({
 
 const Chat = (props) => {
   const classes = useStyles();
-
+  
   return (
     <Box component='div' className={classes.chat}>
-      <Box className={classes.messageWindow}><p>MessageWindow</p></Box>
+      <Box className={classes.messageWindow}>
+        <MessageWindow />
+      </Box>
       <Box style={{ display: 'flex', backgroundColor: 'rgb(40, 40, 54)', height: '100%' }}>
       <Paper component="form" className={classes.mainInputDiv}>
       <IconButton className={classes.iconButton} aria-label="menu">

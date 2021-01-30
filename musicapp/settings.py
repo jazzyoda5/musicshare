@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'djoser',
+    'channels',
     'frontend.apps.FrontendConfig',
     'accounts.apps.AccountsConfig',
     'rooms.apps.RoomsConfig'
@@ -136,3 +137,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+ASGI_APPLICATION = 'musicapp.asgi.application'

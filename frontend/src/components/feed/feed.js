@@ -58,7 +58,7 @@ const Feed = (props) => {
     <div className="feed">
       <div className="feed-menu">
         <Card className={classes.root}>
-          <CardActionArea>
+          <CardActionArea onClick={() => openCreateRoomForm()}>
             <CardContent>
               <Typography
                 gutterBottom
@@ -91,7 +91,39 @@ const Feed = (props) => {
             </Button>
           </CardActions>
         </Card>
-        <CreateRoomForm />
+        <Card className={classes.root}>
+          <CardActionArea>
+            <CardContent>
+              <Typography
+                gutterBottom
+                variant="h5"
+                component="h2"
+                className={classes.text}
+              >
+                Your hangs
+              </Typography>
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                component="p"
+                className={classes.text}
+              >
+                See the hangs you were invited to, or those you have previously joined.
+              </Typography>
+            </CardContent>
+          </CardActionArea>
+          <CardActions>
+            <Button
+              size="small"
+              color="primary"
+              variant="contained"
+              className={classes.button}
+              onClick={() => openCreateRoomForm()}
+            >
+              Your Hangs
+            </Button>
+          </CardActions>
+        </Card>
         <Card className={classes.root}>
           <CardActionArea>
             <CardContent>

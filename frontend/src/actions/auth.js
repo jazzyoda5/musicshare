@@ -13,6 +13,33 @@ import {
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
+export const load_user = () => async dispatch => {
+    const config = {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    };
+
+    try {
+        const res = await axios.get(`${process.env.API_URL}/accounts/load_user/`, config);
+
+        if (!res.data.error) {
+            dispatch({
+                type: USER_LOADED_SUCCESS,
+                payload: res.data
+            })
+        } else {
+            dispatch({
+                type: USER_LOADED_FAIL,
+            });
+        }
+    } catch (err) {
+        dispatch({
+            type: USER_LOADED_FAIL,
+        });
+    }
+};
 
 export const checkAuthenticated = () => async dispatch => {
     console.log('login action');

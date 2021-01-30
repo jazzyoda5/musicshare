@@ -20,7 +20,7 @@ const useStyles = makeStyles({
     color: 'rgb(225, 226, 230)',
     margin: '1rem',
     padding: '1rem',
-    borderRadius: '4px',
+    borderRadius: '2px',
     backgroundColor: 'rgb(46, 46, 63)',
     borderStyle: 'solid',
     borderWidth: '1px',

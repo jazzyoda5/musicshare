@@ -85,6 +85,17 @@ class LogoutView(APIView):
             return Response({ 'error': 'Logout failed.' })
 
 
+class LoadUserView(APIView):
+    permission_classes = [permissions.IsAuthenticated, ]
+    def get(self, request, format=None):
+        user = self.request.user
+        print('[LOADING USER] User: ', user)
+
+        if user:
+            return Response({ 'success': 'User loaded successfully', 'username': str(user) })
+
+
+
 @method_decorator(csrf_protect, name='dispatch')
 class CheckAuthenticated(APIView):
     def get(self, request, format=None):
