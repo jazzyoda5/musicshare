@@ -3,10 +3,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { makeStyles } from "@material-ui/core/styles";
 import { Box } from '@material-ui/core';
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
 import { Link, useRouteMatch } from "react-router-dom";
-import { connect, useSelector } from "react-redux";
 import CSRFToken from "../../csrf_token";
 import LeftRoomNav from './left_nav';
 import Chat from './chat';
@@ -32,16 +29,16 @@ const Room = (props) => {
   const [participants, setParticipants] = useState([]);
   const [messages, setMessages] = useState({});
 
-  const socket = new WebSocket(`${process.env.SOCKET_URL}/ws/${roomId}/`)
+  const socket = new WebSocket(`${process.env.SOCKET_URL}/ws/room/${roomId}/`)
   
   useEffect(() => {
     getRoomData();
 
     socket.onopen = function(e) {
-      console.log('[SOCKET] Connected.')
+      console.log('[SOCKET] Connected.', socket);
     }
     
-    socket.onmessage = event => {
+    socket.onmessage = function(e) {
       console.log('[SOCKET] Message recieved.');
     }
 
@@ -77,6 +74,8 @@ const Room = (props) => {
     socket.send(JSON.stringify({
       'message': 'Hey bruv'
     }));
+    console.log('Message sent.');
+    
   }
 
   return (
@@ -86,7 +85,7 @@ const Room = (props) => {
           <LeftRoomNav roomName={roomName}/>
           <Chat />
         </Box>
-        <button onClick={() => sendMessage()}>Send</button>
+        <button onClick={sendMessage}>Send</button>
     </div>
   );
 };

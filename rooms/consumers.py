@@ -15,4 +15,4 @@ class ChatConsumer(WebsocketConsumer):
         self.send(text_data=json.dumps({
             'message': message
         }))
-        print('[SOCKET SERVER] Transmitting a message: ', message)
+        print('[SOCKET SERVER] Transmitting a message: ', text_data)
