@@ -17,7 +17,8 @@ export const load_user = () => async dispatch => {
     const config = {
         headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-CSRFToken': Cookies.get('csrftoken')
         }
     };
 
@@ -47,7 +48,8 @@ export const checkAuthenticated = () => async dispatch => {
     const config = {
         headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-CSRFToken': Cookies.get('csrftoken')
         }
     };
 
