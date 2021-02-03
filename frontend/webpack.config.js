@@ -33,8 +33,8 @@ module.exports = {
       "process.env": {
         // This has effect on the react lib size
         NODE_ENV: JSON.stringify("production"),
-        API_URL: JSON.stringify('http://127.0.0.1:8000'),
-        SOCKET_URL: JSON.stringify('ws://127.0.0.1:8000'),
+        API_URL: JSON.stringify('http://localhost:8000'),
+        SOCKET_URL: JSON.stringify('ws://localhost:8000'),
       },
     }),
   ],
