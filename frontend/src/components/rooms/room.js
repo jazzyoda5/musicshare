@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { useSelector } from 'react-redux'
 import { makeStyles } from "@material-ui/core/styles";
 import { Box } from '@material-ui/core';
 import { Link, useRouteMatch } from "react-router-dom";
@@ -22,12 +23,13 @@ const useStyles = makeStyles({
 const Room = (props) => {
   const classes = useStyles();
   let match = useRouteMatch();
+  const username = useSelector(state => state.auth.username)
 
   const [roomId, setRoomId] = useState(match.params.room_id);
   const [roomName, setRoomName] = useState('');
   const [roomCreator, setRoomCreator] = useState('');
   const [participants, setParticipants] = useState([]);
-  const [messages, setMessages] = useState({});
+  const [messages, setMessages] = useState([]);
 
   const socket = new WebSocket(`${process.env.SOCKET_URL}/ws/room/${roomId}/`)
   
@@ -37,16 +39,26 @@ const Room = (props) => {
     socket.onopen = function(e) {
       console.log('[SOCKET] Connected.', socket);
     }
-    
-    socket.onmessage = function(e) {
-      console.log('[SOCKET] Message recieved.');
-    }
 
     socket.onclose = function(e) {
       console.error('[SOCKET] Disconnected unexpectedly.');
     }
 
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    socket.onmessage = function(e) {
+      let data = JSON.parse(e.data);
+      let message = data.message;
+      setMessages([...messages, message]);
+      console.log('[SOCKET] Message recieved. ');
+    }
+    return (() => {
+      socket.onmessage = null;
+    });
+
+  }, [messages])
+
 
   const getRoomData = () => {
     const config = {
@@ -70,12 +82,27 @@ const Room = (props) => {
       .catch(err => {console.log(err);});
   }
 
-  const sendMessage = () => {
+  const sendMessage = (message) => {
+    event.preventDefault();
+    console.log('Messages at send', messages);
     socket.send(JSON.stringify({
-      'message': 'Hey bruv'
+      'message': {
+        'content': message,
+        'sender': username
+      }
     }));
-    console.log('Message sent.');
-    
+  }
+
+  const updateMessages = (message) => {
+
+      let content = message.content;
+      let sender = message.sender;
+      var updated_messages = JSON.parse(JSON.stringify(messages));
+      updated_messages.push({
+        content: content,
+        sender: sender
+      });
+    return updated_messages;
   }
 
   return (
@@ -83,9 +110,8 @@ const Room = (props) => {
         <CSRFToken />
         <Box component="div" m={1} className={classes.box}>
           <LeftRoomNav roomName={roomName}/>
-          <Chat />
+          <Chat sendMessage={sendMessage} messages={messages} />
         </Box>
-        <button onClick={sendMessage}>Send</button>
     </div>
   );
 };

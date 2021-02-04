@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from 'react-redux';
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -8,14 +9,20 @@ import Container from "@material-ui/core/Container";
 import InboxIcon from "@material-ui/icons/Inbox";
 import DraftsIcon from "@material-ui/icons/Drafts";
 
+const color1 = "rgb(74, 74, 219)";
+const color2 = "rgb(80, 80, 90)";
+
 const useStyles = makeStyles({
   list: {
     width: "100%",
+    maxHeight: '100%',
     position: "absolute",
     bottom: 0,
+    padding: 0,
+    overflow: 'auto'
   },
   messageContainer: {
-    backgroundColor: "rgb(74, 74, 219)",
+    minWidth: "12%",
     maxWidth: "60%",
     marginRight: 0,
     padding: "1rem",
@@ -23,28 +30,65 @@ const useStyles = makeStyles({
     width: "fit-content",
   },
   sender: {
-      color: 'rgb(220, 220, 240)',
-  }
+    color: "rgb(220, 220, 240)",
+  },
 });
 
 const MessageWindow = (props) => {
   const classes = useStyles();
-
+  const user = useSelector(state => state.auth.username);
+  console.log('chat msgs', props.messages);
   return (
     <div
       className="MessageWindow"
-      style={{ width: "100%", height: "100%", position: "relative" }}
+      style={{ width: "100%", height: "100%", position: "relative"}}
     >
       <List component="ul" className={classes.list}>
-        <ListItem className={classes.message}>
-          <Container className={classes.messageContainer}>
-            <ListItemText>
-                <Typography variant='body2' style={{ color: 'rgb(215, 215, 230)', marginBottom: '0.3rem' }}>jakobverlic</Typography>
-                <Typography variant='body1'>Kak si??</Typography>
-            </ListItemText>
-          </Container>
-        </ListItem>
-    </List>
+        {props.messages.map(message => (
+          
+          <ListItem className={classes.message}>
+            {(user === message.sender) ?
+            <Container className={classes.messageContainer}
+              style={{ backgroundColor: color1 }}
+            >
+              <ListItemText>
+                <Typography
+                  variant="body2"
+                  style={{
+                    color: "rgb(215, 215, 230)",
+                    marginBottom: "0.3rem",
+                  }}
+                >
+                  {message.sender}
+                </Typography>
+                <Typography variant="body1">{message.content}</Typography>
+              </ListItemText>
+            </Container>
+
+          :
+
+            <Container className={classes.messageContainer}
+              style={{ backgroundColor: color2 }}
+            >
+              <ListItemText>
+                <Typography
+                  variant="body2"
+                  style={{
+                    color: "rgb(215, 215, 230)",
+                    marginBottom: "0.3rem",
+                  }}
+                >
+                  {message.sender}
+                </Typography>
+                <Typography variant="body1">{message.content}</Typography>
+              </ListItemText>
+            </Container>
+            }
+          </ListItem>
+          
+          
+        ))};
+      </List>
     </div>
   );
 };
