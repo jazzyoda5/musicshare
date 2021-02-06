@@ -1,5 +1,7 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
+from .models import ActiveUserPublic
+from django.contrib.auth.models import User
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -14,6 +16,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
         await self.accept()
+
+        # Tell the database and the group you are active
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {   
+                'type': 'user_joined',
+                'user': 'hey'
+            }
+        )
 
     async def disconnect(self, close_code):
         # Leave room group
@@ -43,4 +54,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
             'message': message
+        }))
+
+    # Dispatch new user to group
+    async def user_joined(self, event):
+        user = event['user']
+
+        # Send message to WebSocket
+        await self.send(text_data=json.dumps({
+            'user_joined': user
         }))

@@ -15,7 +15,7 @@ const useStyles = makeStyles({
     display: 'grid',
     gridTemplateColumns: '30% 70%',
     height: '100%',
-    maxWidth: '1300px',
+    maxWidth: '1000px',
     margin: 'auto',
   }
 });
@@ -49,15 +49,23 @@ const Room = (props) => {
   useEffect(() => {
     socket.onmessage = function(e) {
       let data = JSON.parse(e.data);
-      let message = data.message;
-      setMessages([...messages, message]);
-      console.log('[SOCKET] Message recieved. ');
+      if (data.message) {
+        let message = data.message;
+        setMessages([...messages, message]);
+        console.log('[SOCKET] Message recieved. ');
+      }
+      else if (data.user_joined) {
+        let new_user = data.user_joined;
+        setParticipants([...participants, new_user]);
+        console.log('[SOCKET] New user joined the room. ', new_user);
+      }
+      
     }
     return (() => {
       socket.onmessage = null;
     });
 
-  }, [messages])
+  }, [messages, participants])
 
 
   const getRoomData = () => {
@@ -109,7 +117,9 @@ const Room = (props) => {
     <div className="room">
         <CSRFToken />
         <Box component="div" m={1} className={classes.box}>
-          <LeftRoomNav roomName={roomName}/>
+          <LeftRoomNav roomName={roomName}
+            participants={participants}
+          />
           <Chat sendMessage={sendMessage} messages={messages} />
         </Box>
     </div>

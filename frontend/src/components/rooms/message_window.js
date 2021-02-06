@@ -22,12 +22,12 @@ const useStyles = makeStyles({
     overflow: 'auto'
   },
   messageContainer: {
+    display: 'flex',
     minWidth: "12%",
     maxWidth: "60%",
-    marginRight: 0,
     padding: "1rem",
     borderRadius: "7px",
-    width: "fit-content",
+    width: "min-content",
   },
   sender: {
     color: "rgb(220, 220, 240)",
@@ -49,7 +49,7 @@ const MessageWindow = (props) => {
           <ListItem className={classes.message}>
             {(user === message.sender) ?
             <Container className={classes.messageContainer}
-              style={{ backgroundColor: color1 }}
+              style={{ backgroundColor: color1, marginRight: '1rem' }}
             >
               <ListItemText>
                 <Typography
@@ -68,7 +68,7 @@ const MessageWindow = (props) => {
           :
 
             <Container className={classes.messageContainer}
-              style={{ backgroundColor: color2 }}
+              style={{ backgroundColor: color2, marginLeft: '1rem' }}
             >
               <ListItemText>
                 <Typography

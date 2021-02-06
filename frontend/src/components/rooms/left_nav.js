@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { makeStyles } from "@material-ui/core/styles";
-import { Box } from '@material-ui/core';
+import { Box, ListItem, ListItemText } from '@material-ui/core';
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import List from "@material-ui/core/List";
 import { Link, useRouteMatch } from "react-router-dom";
 import { connect, useSelector } from "react-redux";
 import CSRFToken from "../../csrf_token";
@@ -34,6 +35,13 @@ const LeftRoomNav = (props) => {
   return (
     <Box component='div' className={classes.nav}>
         <Typography variant='h4' className={classes.title}>{props.roomName}</Typography>
+        <List component='ul' >
+          <ListItem>
+            <ListItemText>
+               <h1>Nekdo Priimek</h1>
+            </ListItemText>           
+          </ListItem>
+        </List>
     </Box>
   );
 };
