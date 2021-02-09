@@ -1,45 +1,62 @@
 import json
-from channels.generic.websocket import AsyncWebsocketConsumer
-from .models import ActiveUserPublic
+from channels.generic.websocket import WebsocketConsumer
+from .models import ActiveUserPublic, Room
 from django.contrib.auth.models import User
+from asgiref.sync import sync_to_async
 
 
-class ChatConsumer(AsyncWebsocketConsumer):
-    async def connect(self):
+class ChatConsumer(WebsocketConsumer):
+    def connect(self):
         self.room_id = self.scope['url_route']['kwargs']['room_id']
         self.room_group_name = 'chat_%s' % self.room_id
 
         # Join room group
-        await self.channel_layer.group_add(
+        self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
         )
 
-        await self.accept()
+        self.accept()
 
-        # Tell the database and the group you are active
-        await self.channel_layer.group_send(
+        # Mark as active user in DB
+        room = Room.objects.get(room_id=self.room_id)
+        au_instance = ActiveUserPublic(user=self.scope['user'], room=room)
+        au_instance.save()
+
+        # Tell the group which user has joined
+        self.channel_layer.group_send(
             self.room_group_name,
-            {   
-                'type': 'user_joined',
-                'user': 'hey'
+            {
+                'type': 'chat_message',
+                'message': {
+                    'type': 'user_joined',
+                    'content': str(self.scope['user'])
+                }
             }
         )
 
-    async def disconnect(self, close_code):
+
+    def disconnect(self, close_code):
         # Leave room group
-        await self.channel_layer.group_discard(
+        self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
         )
 
+        # Delete active user instance in db
+        room = Room.objects.get(room_id=self.room_id)
+        au_instance = ActiveUserPublic.objects.get(user=self.scope['user'], room=room)
+        au_instance.delete()
+
+
     # Receive message from WebSocket
-    async def receive(self, text_data):
+    def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
 
+
         # Send message to room group
-        await self.channel_layer.group_send(
+        self.channel_layer.group_send(
             self.room_group_name,
             {
                 'type': 'chat_message',
@@ -47,20 +64,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
             }
         )
 
-    # Receive message from room group
-    async def chat_message(self, event):
+    # Receive data from room group
+    def chat_message(self, event):
         message = event['message']
+        print('[SOCKET] Message emitted. User: {}, Room ID: {}'.format(self.scope['user'],
+                                                                       self.scope['url_route']['kwargs']['room_id']))
 
         # Send message to WebSocket
-        await self.send(text_data=json.dumps({
+        self.send(text_data=json.dumps({
             'message': message
-        }))
-
-    # Dispatch new user to group
-    async def user_joined(self, event):
-        user = event['user']
-
-        # Send message to WebSocket
-        await self.send(text_data=json.dumps({
-            'user_joined': user
         }))

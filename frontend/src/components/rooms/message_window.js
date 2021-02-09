@@ -37,7 +37,7 @@ const useStyles = makeStyles({
 const MessageWindow = (props) => {
   const classes = useStyles();
   const user = useSelector(state => state.auth.username);
-  console.log('chat msgs', props.messages);
+  
   return (
     <div
       className="MessageWindow"

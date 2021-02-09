@@ -20,53 +20,82 @@ const useStyles = makeStyles({
   }
 });
 
+
+
 const Room = (props) => {
   const classes = useStyles();
   let match = useRouteMatch();
   const username = useSelector(state => state.auth.username)
+  const socket = useRef();
 
   const [roomId, setRoomId] = useState(match.params.room_id);
   const [roomName, setRoomName] = useState('');
   const [roomCreator, setRoomCreator] = useState('');
   const [participants, setParticipants] = useState([]);
   const [messages, setMessages] = useState([]);
-
-  const socket = new WebSocket(`${process.env.SOCKET_URL}/ws/room/${roomId}/`)
+  
   
   useEffect(() => {
     getRoomData();
 
-    socket.onopen = function(e) {
+    console.log('username: ', username);
+
+    socket.current = new WebSocket(`${process.env.SOCKET_URL}/ws/room/${roomId}/`)
+
+    socket.current.onopen = function(e) {
       console.log('[SOCKET] Connected.', socket);
     }
 
-    socket.onclose = function(e) {
+    socket.current.onclose = function(e) {
       console.error('[SOCKET] Disconnected unexpectedly.');
     }
 
+    return(() => {
+      socket.current.close();
+    })
+
   }, []);
 
+  /* 
+  The way I created custom events is
+  data.message contains a param type
+  that is the name of the custom event
+  and data.content, which is the data that
+  is relevant
+  */
+
   useEffect(() => {
-    socket.onmessage = function(e) {
+    if (!socket.current) return;
+
+    socket.current.onmessage = function(e) {
       let data = JSON.parse(e.data);
-      if (data.message) {
-        let message = data.message;
+      let type = data.message.type;
+      let content = data.message.content;
+
+      if ( type === 'message' ) {
+        /* 
+        format of messages is
+        { content: {
+          content: message,
+          sender: username
+        }}
+        */
+        let message = content;
         setMessages([...messages, message]);
-        console.log('[SOCKET] Message recieved. ');
+        console.log('[SOCKET] Message recieved. -> ', message);
       }
-      else if (data.user_joined) {
-        let new_user = data.user_joined;
+      else if ( type === 'user_joined' ) {
+        let new_user = content;
         setParticipants([...participants, new_user]);
-        console.log('[SOCKET] New user joined the room. ', new_user);
+        console.log('[SOCKET] New user joined the room. -> ', new_user);
       }
-      
     }
-    return (() => {
-      socket.onmessage = null;
-    });
+
+    return () => {
+      socket.current.onmessage = null;
+    };
 
   }, [messages, participants])
-
 
   const getRoomData = () => {
     const config = {
@@ -90,28 +119,21 @@ const Room = (props) => {
       .catch(err => {console.log(err);});
   }
 
-  const sendMessage = (message) => {
+  const sendMessage = ( message ) => {
     event.preventDefault();
-    console.log('Messages at send', messages);
-    socket.send(JSON.stringify({
-      'message': {
-        'content': message,
-        'sender': username
-      }
-    }));
+    if (socket.current) {
+      socket.current.send(JSON.stringify({
+        'message': {
+          'type': 'message',
+          'content': {
+            'content': message,
+            'sender': username
+          }
+        }
+      }));
+    }
   }
 
-  const updateMessages = (message) => {
-
-      let content = message.content;
-      let sender = message.sender;
-      var updated_messages = JSON.parse(JSON.stringify(messages));
-      updated_messages.push({
-        content: content,
-        sender: sender
-      });
-    return updated_messages;
-  }
 
   return (
     <div className="room">

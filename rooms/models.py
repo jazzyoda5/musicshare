@@ -38,7 +38,7 @@ class ActiveUserPublic(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.user
+        return str(self.user)
 
 
 

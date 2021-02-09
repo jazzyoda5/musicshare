@@ -36,11 +36,13 @@ const LeftRoomNav = (props) => {
     <Box component='div' className={classes.nav}>
         <Typography variant='h4' className={classes.title}>{props.roomName}</Typography>
         <List component='ul' >
-          <ListItem>
+          {props.participants.map(user => (
+            <ListItem>
             <ListItemText>
-               <h1>Nekdo Priimek</h1>
+               <h1>{user}</h1>
             </ListItemText>           
           </ListItem>
+          ))}
         </List>
     </Box>
   );
