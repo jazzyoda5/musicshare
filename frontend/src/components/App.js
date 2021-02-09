@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Feed from "./feed/feed.js";
+import YourHangs from "./feed/your_hangs.js";
 import Home from "./home/home.js";
 import LoginForm from "./accounts/login_form";
 import SignupForm from "./accounts/signup_form";
@@ -26,7 +27,8 @@ export default function App(props) {
               <Home />
             </Route>
           <Layout>
-            <PrivateRoute exact path="/publicroom/:room_id" component={Room} />
+            <PrivateRoute exact path="/room/:room_id" component={Room} />
+            <PrivateRoute exact path="/yourhangs" component={YourHangs} />
             <PrivateRoute exact path="/feed" component={Feed} />
           </Layout>
         </Switch>

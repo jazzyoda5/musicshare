@@ -41,6 +41,14 @@ class ActiveUserPublic(models.Model):
         return str(self.user)
 
 
+class RoomAccessPermission(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.user) + ' - ' + str(self.room.room_id)
+
+
 
         
 

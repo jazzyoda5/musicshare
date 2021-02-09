@@ -118,7 +118,8 @@ const Feed = (props) => {
               color="primary"
               variant="contained"
               className={classes.button}
-              onClick={() => openCreateRoomForm()}
+              component={Link}
+              to='/yourhangs'
             >
               Your Hangs
             </Button>

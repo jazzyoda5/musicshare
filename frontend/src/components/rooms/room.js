@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 import { useSelector } from 'react-redux'
 import { makeStyles } from "@material-ui/core/styles";
 import { Box } from '@material-ui/core';
-import { Link, useRouteMatch } from "react-router-dom";
+import { Link, useRouteMatch, useHistory } from "react-router-dom";
 import CSRFToken from "../../csrf_token";
 import LeftRoomNav from './left_nav';
 import Chat from './chat';
@@ -23,6 +23,7 @@ const useStyles = makeStyles({
 
 
 const Room = (props) => {
+  const history = useHistory();
   const classes = useStyles();
   let match = useRouteMatch();
   const username = useSelector(state => state.auth.username)
@@ -36,14 +37,11 @@ const Room = (props) => {
   
   
   useEffect(() => {
-    getRoomData();
-
-    console.log('username: ', username);
-
     socket.current = new WebSocket(`${process.env.SOCKET_URL}/ws/room/${roomId}/`)
 
     socket.current.onopen = function(e) {
       console.log('[SOCKET] Connected.', socket);
+
     }
 
     socket.current.onclose = function(e) {
@@ -84,10 +82,22 @@ const Room = (props) => {
         setMessages([...messages, message]);
         console.log('[SOCKET] Message recieved. -> ', message);
       }
+
       else if ( type === 'user_joined' ) {
         let new_user = content;
         setParticipants([...participants, new_user]);
         console.log('[SOCKET] New user joined the room. -> ', new_user);
+      }
+
+      else if ( type === 'access_error' ) {
+        // Access to room denied
+        history.push('/feed');
+      }
+
+      else if ( type === 'get_room_data' ) {
+        setRoomName(content.room_name);
+        setRoomCreator(content.room_creator);
+        setParticipants(content.participants);
       }
     }
 
@@ -97,27 +107,6 @@ const Room = (props) => {
 
   }, [messages, participants])
 
-  const getRoomData = () => {
-    const config = {
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'X-CSRFToken': Cookies.get('csrftoken')
-        },
-    };
-
-    const body = JSON.stringify({
-        'room_id': roomId
-    })
-
-    axios.post(`${process.env.API_URL}/api/rooms/get_data/`, body, config)
-      .then(response => {
-        console.log(response.data);
-        setRoomCreator(response.data.room_creator);
-        setRoomName(response.data.room_name);
-      })
-      .catch(err => {console.log(err);});
-  }
 
   const sendMessage = ( message ) => {
     event.preventDefault();

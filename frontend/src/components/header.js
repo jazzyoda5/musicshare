@@ -64,7 +64,8 @@ const Header = ({ logout }) => {
             style={{ 
               display: 'inline-flex',
               fontSize: '30px', 
-              color: 'rgb(225, 226, 230)' 
+              color: 'rgb(225, 226, 230)' ,
+              backgroundColor: 'rgb(70, 70, 80)'
             }}
           ><PersonIcon style={{ fontSize: 'inherit' }} /></IconButton>
         </div>
