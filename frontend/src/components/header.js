@@ -34,6 +34,7 @@ const Header = ({ logout }) => {
 
   return (
     <div className="nav">
+      <div className="nav-content">
         <Typography variant='h2' 
         style={{ color: 'rgb(225, 226, 230)',
         display: 'inline-block' }}>hang</Typography>
@@ -70,6 +71,8 @@ const Header = ({ logout }) => {
           ><PersonIcon style={{ fontSize: 'inherit' }} /></IconButton>
         </div>
     </div>
+    </div>
+    
   );
 }
 

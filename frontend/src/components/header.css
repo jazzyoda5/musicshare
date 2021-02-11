@@ -1,12 +1,21 @@
-.nav { 
+.nav {
     display: flex;
-    margin: auto;
+    width: 100%;
+    text-align: center;
     background-color: rgb(89, 89, 102);
-    height: 5rem;
-    padding-inline: 5rem;
+    justify-content: center;
+    align-items: center;   
     border-bottom-style: solid;
     border-bottom-width: 1px;
-    border-bottom-color: rgb(129, 129, 152);
+    border-bottom-color: rgb(129, 129, 152); 
+}
+.nav-content { 
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 600px));
+    width: 100%;
+    max-width: 1200px;
+    margin-block: auto;
+    background-color: rgb(89, 89, 102);
     justify-content: space-between;
     align-items: center;
 }

@@ -21,7 +21,7 @@ const useStyles = makeStyles({
     alignItems: "center",
     width: "80%",
     height: "60%",
-    backgroundColor: "rgb(55, 55, 75)",
+    backgroundColor: "rgb(48, 48, 63)",
     margin: "auto",
     color: "white",
   },
@@ -45,6 +45,10 @@ const useStyles = makeStyles({
     height: "100%",
     width: "100%",
     alignItems: "center",
+    borderStyle: 'solid',
+    borderWidth: '1px',
+    borderColor: 'rgb(89, 89, 102)',
+    borderLeftColor: 'rgb(69, 69, 82)',
   },
   textInput: {
     width: "80%",
@@ -104,7 +108,7 @@ const Chat = (props) => {
       <Box
         style={{
           display: "flex",
-          backgroundColor: "rgb(40, 40, 54)",
+          backgroundColor: "rgb(69, 69, 82)",
           height: "100%",
         }}
       >

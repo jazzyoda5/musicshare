@@ -71,30 +71,43 @@ const YourHangs = (props) => {
     <div className="yourhangs">
       <div className="yourhangs-grid">
         <Box className={classes.yourhangsbox}>
-          <Typography variant="h4" className={classes.boxTitle}>
+          <Typography variant="h5" className={classes.boxTitle}>
             Hangs You Manage
           </Typography>
           <List>
-            {usersRooms.map((room) => (
-              <ListItem className={classes.listItem}>
-                <Button
+          {usersRooms.length < 1 ? (
+              <ListItem className={classes.noRooms}>
+                <Typography
                   style={{
                     color: "rgb(225, 226, 230)",
-                    width: "100%",
-                    height: "100%",
+                    textAlign: "center",
                   }}
-                  component={Link}
-                  to={`/room/${room.room_id}`}
                 >
-                  {room.room_name}
-                </Button>
+                  You haven't created any hangs.
+                </Typography>
               </ListItem>
-            ))}
+            ) : (
+              usersRooms.map((room) => (
+                <ListItem className={classes.listItem}>
+                  <Button
+                    style={{
+                      color: "rgb(225, 226, 230)",
+                      width: "100%",
+                      height: "100%",
+                    }}
+                    component={Link}
+                    to={`/room/${room.room_id}`}
+                  >
+                    {room.room_name}
+                  </Button>
+                </ListItem>
+              ))
+            )}
           </List>
         </Box>
         <Box className={classes.yourhangsbox}>
-          <Typography variant="h4" className={classes.boxTitle}>
-            Your Hangs
+          <Typography variant="h5" className={classes.boxTitle}>
+            Saved Hangs
           </Typography>
           <List>
             {savedRooms.length < 1 ? (
@@ -117,6 +130,8 @@ const YourHangs = (props) => {
                       width: "100%",
                       height: "100%",
                     }}
+                    component={Link}
+                    to={`/room/${room.room_id}`}
                   >
                     {room.room_name}
                   </Button>
