@@ -2,12 +2,13 @@ from django.shortcuts import render
 from rest_framework import views
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from .serializers import CreateRoomSerializer
+from .serializers import CreateRoomSerializer, DeleteRoomSerializer
+from accounts.serializers import SaveRoomSerializer, DeleteSavedRoomSerializer
 from .models import Room
 from accounts.models import SavedRoom
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 from django.utils.decorators import method_decorator
-
+from django.contrib.auth.models import User
 
 @method_decorator(csrf_protect, name='dispatch')
 class CreateRoomView(views.APIView):
@@ -48,8 +49,8 @@ class GetYourRooms(views.APIView):
 
         for room in saved_rooms:
             dict1 = {}
-            dict1['room_id'] = room.room_id
-            dict1['room_name'] = room.name
+            dict1['room_id'] = room.room.room_id
+            dict1['room_name'] = room.room.name
             saved_rooms_list.append(dict1)
 
         users_rooms = Room.objects.filter(creator=user)
@@ -67,5 +68,80 @@ class GetYourRooms(views.APIView):
             'users_rooms': users_rooms_list
         }
         return Response(response_data)
+
+
+@method_decorator(csrf_protect, name='dispatch')
+class SaveThisRoom(views.APIView):
+    permission_classes = [IsAuthenticated, ]
+    serializer_class = SaveRoomSerializer
+
+    def post(self, request, format=None):
+        serializer = self.serializer_class(data=request.data)
+
+        # Check if data is valid
+        if serializer.is_valid():
+            try:
+                user = User.objects.get(username=serializer.data['username'])
+                room = Room.objects.get(room_id=serializer.data['roomId'])
+
+                sr_instance = SavedRoom(user=user, room=room)
+                sr_instance.save()
+
+                response_data = {
+                    'success': 'Room saved successfully',
+                }
+                return Response(response_data)
+
+            except:
+                return Response({ 'error': 'Something went wrong.' })
+
+        else: 
+            print('Data not valid')
+            return Response({ 'error': 'Something went wrong.' })
+
+
+@method_decorator(csrf_protect, name='dispatch')
+class DeleteRoom(views.APIView):
+    permission_classes = [IsAuthenticated, ]
+    serializer_class = DeleteRoomSerializer  
+
+    def post(self, request, format=None):
+        serializer = self.serializer_class(data=request.data)
+
+        if serializer.is_valid():
+            user = request.user
+            room = Room.objects.get(room_id=serializer.data['room_id'])
+
+            if user == room.creator:
+                room.delete()
+                response_data = {
+                    'success': 'Room saved successfully',
+                }
+                return Response(response_data)
+
+        return Response({ 'error': 'Something went wrong.' })
+
+
+@method_decorator(csrf_protect, name='dispatch')
+class DeleteSavedRoom(views.APIView):
+    permission_classes = [IsAuthenticated, ]
+    serializer_class = DeleteSavedRoomSerializer  
+
+    def post(self, request, format=None):
+        serializer = self.serializer_class(data=request.data)
+
+        if serializer.is_valid():
+            user = request.user
+            room = Room.objects.get(room_id=serializer.data['room_id'])
+            sr_instance = SavedRoom.objects.get(room=room)
+
+            if user == sr_instance.user:
+                sr_instance.delete()
+                response_data = {
+                    'success': 'Link deleted successfully',
+                }
+                return Response(response_data)
+
+        return Response({ 'error': 'Something went wrong.' })
 
 

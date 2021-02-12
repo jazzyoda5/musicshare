@@ -27,7 +27,7 @@ const useStyles = makeStyles({
     maxWidth: "60%",
     padding: "1rem",
     borderRadius: "7px",
-    width: "min-content",
+    width: "fit-content",
   },
   sender: {
     color: "rgb(220, 220, 240)",

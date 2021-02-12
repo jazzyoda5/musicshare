@@ -6,10 +6,14 @@ import { Box, ListItem, ListItemText } from '@material-ui/core';
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import List from "@material-ui/core/List";
+import CheckBoxIcon from '@material-ui/icons/CheckBox';
+import Switch from '@material-ui/core/Switch';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
 import PersonIcon from '@material-ui/icons/Person';
 import { Link, useRouteMatch } from "react-router-dom";
 import { connect, useSelector } from "react-redux";
-import CSRFToken from "../../csrf_token";
 
 const useStyles = makeStyles({
   nav: {
@@ -35,21 +39,73 @@ const useStyles = makeStyles({
   participantsBox: {
     backgroundColor: 'rgb(46, 46, 63)',
     margin: '1rem',
+    borderStyle: 'solid',
+    borderWidth: '1px',
+    borderColor: 'rgb(100, 100, 120)',
   },
   participant: {
     display: 'flex',
     backgroundColor: 'rgb(56, 56, 73)',
     margin: '0.5rem',
-    textAlign: 'center'
+    textAlign: 'center',
+    color: 'rgb(225, 226, 230)',
   }
 });
 
 const LeftRoomNav = (props) => {
+  const { participants, roomName, roomId, username, isRoomSaved, setIsRoomSaved } = props;
   const classes = useStyles();
+  // rename prop so that is compatible with the serializer
+  // should have thought of this earlier
+
+  const saveThisHang = async () => {
+    console.log('Save this hang. -> ', roomId, username);
+
+    const config = {
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'X-CSRFToken': Cookies.get('csrftoken')
+        }
+    };
+    const body = JSON.stringify({ roomId, username });
+    
+    const res = await axios.post(`${process.env.API_URL}/api/rooms/saveroom/`, body, config);
+
+    if (res.data.success) {
+      console.log(res.data.success);
+      setIsRoomSaved(true);
+    } else {
+      console.log('Fail');
+    }
+
+  }
+
+  const deleteSavedRoom = async (room_id) => {
+    const config = {
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'X-CSRFToken': Cookies.get('csrftoken')
+        }
+    };
+
+    const body = JSON.stringify({ room_id });
+    const res = await axios.post(`${process.env.API_URL}/api/rooms/deletesavedroom/`, body, config);
+
+    if (res.data.success) {
+      console.log('Success');
+      setIsRoomSaved(false);
+    } 
+    else if (res.data.error) {
+      console.log(res.data.error);
+    }
+  }
 
   return (
     <Box component='div' className={classes.nav}>
-        <Typography variant='h4' className={classes.title}>{props.roomName}</Typography>
+        <Typography variant='h4' className={classes.title}>{roomName}</Typography>
+        {(isRoomSaved) ?
         <Button
         variant='contained'
         style={{
@@ -57,11 +113,22 @@ const LeftRoomNav = (props) => {
           backgroundColor: 'rgb(56, 56, 73)',
           marginBottom: '2rem'
         }}
-        >Save This Hang</Button>
+        onClick={() => {deleteSavedRoom(roomId)}}
+        >Hang Saved<CheckBoxIcon style={{ marginLeft: '1rem', color: 'rgb(84, 84, 199)' }}/></Button>
+        :
+        <Button
+        variant='contained'
+        style={{
+          color: "rgb(225, 226, 230)",
+          backgroundColor: 'rgb(56, 56, 73)',
+          marginBottom: '2rem'
+        }}
+        onClick={() => {saveThisHang()}}
+        >Save This Hang</Button>}
         <Box className={classes.participantsBox}>
           <List component='ul' >
-          <Typography variant='h6' style={{ marginBottom: '1rem' }}>Participants</Typography>
-          {props.participants.map(user => (
+          <Typography variant='h6' style={{ marginBottom: '1rem', color: 'rgb(225, 226, 230)', }}>Participants</Typography>
+          {participants.map(user => (
             <Box className={classes.participant}>
               <ListItem>
                 <ListItemText style={{ textAlign: 'center' }}>
@@ -72,7 +139,6 @@ const LeftRoomNav = (props) => {
           ))}
         </List>
         </Box>
-        
     </Box>
   );
 };

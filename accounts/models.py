@@ -7,6 +7,3 @@ class SavedRoom(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return str(self.user.username) + ' - ' + str(room.room_id)
-

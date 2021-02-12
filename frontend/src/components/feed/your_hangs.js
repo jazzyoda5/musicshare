@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Cookies from 'js-cookie';
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import List from "@material-ui/core/List";
-import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
-import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+import IconButton from '@material-ui/core/IconButton';
 import { Link } from "react-router-dom";
 import { connect, useSelector } from "react-redux";
 import CreateRoomForm from "./create_room.js";
@@ -67,6 +68,48 @@ const YourHangs = (props) => {
       console.log("[ERROR] Could not get neccessary data.");
     }
   };
+
+  const deleteUsersRoom = async (room_id) => {
+    const config = {
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'X-CSRFToken': Cookies.get('csrftoken')
+        }
+    };
+
+    const body = JSON.stringify({ room_id });
+    const res = await axios.post(`${process.env.API_URL}/api/rooms/deleteroom/`, body, config);
+
+    if (res.data.success) {
+      setUsersRooms(usersRooms.filter(room => room.room_id !== room_id));
+    } 
+    else if (res.data.error) {
+      console.log(res.data.error);
+    }
+  }
+
+  const deleteSavedRoom = async (room_id) => {
+    const config = {
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'X-CSRFToken': Cookies.get('csrftoken')
+        }
+    };
+
+    const body = JSON.stringify({ room_id });
+    const res = await axios.post(`${process.env.API_URL}/api/rooms/deletesavedroom/`, body, config);
+
+    if (res.data.success) {
+      console.log('Success');
+      setSavedRooms(savedRooms.filter(room => room.room_id !== room_id));
+    } 
+    else if (res.data.error) {
+      console.log(res.data.error);
+    }
+  }
+
   return (
     <div className="yourhangs">
       <div className="yourhangs-grid">
@@ -100,6 +143,12 @@ const YourHangs = (props) => {
                   >
                     {room.room_name}
                   </Button>
+                  <IconButton 
+                  style={{ color: 'rgb(64, 64, 199)' }}
+                  onClick={() => deleteUsersRoom(room.room_id)}
+                  >
+                    <DeleteOutlineIcon />
+                  </IconButton>
                 </ListItem>
               ))
             )}
@@ -135,6 +184,11 @@ const YourHangs = (props) => {
                   >
                     {room.room_name}
                   </Button>
+                  <IconButton 
+                  style={{ color: 'rgb(64, 64, 199)' }}
+                  onClick={() => deleteSavedRoom(room.room_id)}>
+                    <DeleteOutlineIcon />
+                  </IconButton>
                 </ListItem>
               ))
             )}

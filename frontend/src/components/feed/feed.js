@@ -92,7 +92,7 @@ const Feed = (props) => {
           </CardActions>
         </Card>
         <Card className={classes.root}>
-          <CardActionArea>
+          <CardActionArea  component={Link} to='/yourhangs' style={{ textDecoration: 'none' }}>
             <CardContent>
               <Typography
                 gutterBottom

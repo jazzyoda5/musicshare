@@ -1,6 +1,7 @@
 import json
 from channels.generic.websocket import WebsocketConsumer
 from .models import ActiveUserPublic, Room, RoomAccessPermission
+from accounts.models import SavedRoom
 from django.contrib.auth.models import User
 from asgiref.sync import async_to_sync
 
@@ -44,13 +45,20 @@ class RoomConsumer(WebsocketConsumer):
 
         
         # Send the user data about the room
+        try:
+            sr_instance = SavedRoom.objects.get(user=user, room=room)
+            room_saved = True
+        except SavedRoom.DoesNotExist:
+            room_saved = False
+
         self.send(text_data=json.dumps({
             'message': {
                 'type': 'get_room_data',
                 'content': {
                     'room_name': room.name,
                     'room_creator': room.creator.username, 
-                    'participants': participants
+                    'participants': participants,
+                    'is_room_saved': room_saved
                 }
             }
         }))

@@ -80,7 +80,7 @@ const CreateRoomForm = (props) => {
       .then(response => {
         console.log(response.data);
         if (response.data.room_id) {
-          props.history.push('/publicroom/' + response.data.room_id)
+          props.history.push('/room/' + response.data.room_id)
         }
       })
       .catch(err => {console.log(err);});
