@@ -45,6 +45,7 @@ class RoomConsumer(WebsocketConsumer):
 
         
         # Send the user data about the room
+        # See if he saved the room before
         try:
             sr_instance = SavedRoom.objects.get(user=user, room=room)
             room_saved = True
@@ -58,7 +59,8 @@ class RoomConsumer(WebsocketConsumer):
                     'room_name': room.name,
                     'room_creator': room.creator.username, 
                     'participants': participants,
-                    'is_room_saved': room_saved
+                    'is_room_saved': room_saved,
+                    'room_access': room.access
                 }
             }
         }))

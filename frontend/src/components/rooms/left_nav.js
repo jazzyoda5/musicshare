@@ -1,147 +1,184 @@
 import React, { useState, useEffect } from "react";
-import axios from 'axios';
-import Cookies from 'js-cookie';
+import axios from "axios";
+import Cookies from "js-cookie";
 import { makeStyles } from "@material-ui/core/styles";
-import { Box, ListItem, ListItemText } from '@material-ui/core';
+import { Box, ListItem, ListItemText } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import List from "@material-ui/core/List";
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import Switch from '@material-ui/core/Switch';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import PersonIcon from '@material-ui/icons/Person';
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import Switch from "@material-ui/core/Switch";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
+import PersonIcon from "@material-ui/icons/Person";
 import { Link, useRouteMatch } from "react-router-dom";
 import { connect, useSelector } from "react-redux";
 
 const useStyles = makeStyles({
   nav: {
-    backgroundColor: 'rgb(69, 69, 82)',
-    borderRadius: '4px',
-    height: '100%',
-    width: '100%',
-    borderStyle: 'solid',
-    borderWidth: '1px',
-    borderColor: 'rgb(89, 89, 102)',
-    borderRightColor: 'rgba(0, 0, 0, 0)'
+    backgroundColor: "rgb(69, 69, 82)",
+    borderRadius: "4px",
+    height: "100%",
+    width: "100%",
+    borderStyle: "solid",
+    borderWidth: "1px",
+    borderColor: "rgb(89, 89, 102)",
+    borderRightColor: "rgba(0, 0, 0, 0)",
   },
   title: {
-    color: 'rgb(225, 226, 230)',
-    margin: '1rem',
-    padding: '1rem',
-    borderRadius: '2px',
-    backgroundColor: 'rgb(46, 46, 63)',
-    borderStyle: 'solid',
-    borderWidth: '1px',
-    borderColor: 'rgb(100, 100, 120)',
+    color: "rgb(225, 226, 230)",
+    margin: "1rem",
+    padding: "1rem",
+    borderRadius: "2px",
+    backgroundColor: "rgb(46, 46, 63)",
+    borderStyle: "solid",
+    borderWidth: "1px",
+    borderColor: "rgb(100, 100, 120)",
   },
   participantsBox: {
-    backgroundColor: 'rgb(46, 46, 63)',
-    margin: '1rem',
-    borderStyle: 'solid',
-    borderWidth: '1px',
-    borderColor: 'rgb(100, 100, 120)',
+    backgroundColor: "rgb(46, 46, 63)",
+    margin: "1rem",
+    borderStyle: "solid",
+    borderWidth: "1px",
+    borderColor: "rgb(100, 100, 120)",
   },
   participant: {
-    display: 'flex',
-    backgroundColor: 'rgb(56, 56, 73)',
-    margin: '0.5rem',
-    textAlign: 'center',
-    color: 'rgb(225, 226, 230)',
-  }
+    display: "flex",
+    backgroundColor: "rgb(56, 56, 73)",
+    margin: "0.5rem",
+    textAlign: "center",
+    color: "rgb(225, 226, 230)",
+  },
 });
 
 const LeftRoomNav = (props) => {
-  const { participants, roomName, roomId, username, isRoomSaved, setIsRoomSaved } = props;
+  const {
+    participants,
+    roomName,
+    roomId,
+    username,
+    isRoomSaved,
+    setIsRoomSaved,
+    roomAccess
+  } = props;
   const classes = useStyles();
   // rename prop so that is compatible with the serializer
   // should have thought of this earlier
 
   const saveThisHang = async () => {
-    console.log('Save this hang. -> ', roomId, username);
+    console.log("Save this hang. -> ", roomId, username);
 
     const config = {
       headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'X-CSRFToken': Cookies.get('csrftoken')
-        }
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "X-CSRFToken": Cookies.get("csrftoken"),
+      },
     };
     const body = JSON.stringify({ roomId, username });
-    
-    const res = await axios.post(`${process.env.API_URL}/api/rooms/saveroom/`, body, config);
+
+    const res = await axios.post(
+      `${process.env.API_URL}/api/rooms/saveroom/`,
+      body,
+      config
+    );
 
     if (res.data.success) {
       console.log(res.data.success);
       setIsRoomSaved(true);
     } else {
-      console.log('Fail');
+      console.log("Fail");
     }
-
-  }
+  };
 
   const deleteSavedRoom = async (room_id) => {
     const config = {
       headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'X-CSRFToken': Cookies.get('csrftoken')
-        }
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "X-CSRFToken": Cookies.get("csrftoken"),
+      },
     };
 
     const body = JSON.stringify({ room_id });
-    const res = await axios.post(`${process.env.API_URL}/api/rooms/deletesavedroom/`, body, config);
+    const res = await axios.post(
+      `${process.env.API_URL}/api/rooms/deletesavedroom/`,
+      body,
+      config
+    );
 
     if (res.data.success) {
-      console.log('Success');
+      console.log("Success");
       setIsRoomSaved(false);
-    } 
-    else if (res.data.error) {
+    } else if (res.data.error) {
       console.log(res.data.error);
     }
-  }
+  };
 
   return (
-    <Box component='div' className={classes.nav}>
-        <Typography variant='h4' className={classes.title}>{roomName}</Typography>
-        {(isRoomSaved) ?
+    <Box component="div" className={classes.nav}>
+      {(roomAccess === 'Private') ? 
+      <Typography variant="subtitle1" style={{ paddingTop: '1rem', color: 'rgb(225, 226, 230)' }}>
+      Private Room
+      </Typography>
+      : null}
+      <Typography variant="h4" className={classes.title}>
+        {roomName}
+      </Typography>
+      {isRoomSaved ? (
         <Button
-        variant='contained'
-        style={{
-          color: "rgb(225, 226, 230)",
-          backgroundColor: 'rgb(56, 56, 73)',
-          marginBottom: '2rem'
-        }}
-        onClick={() => {deleteSavedRoom(roomId)}}
-        >Hang Saved<CheckBoxIcon style={{ marginLeft: '1rem', color: 'rgb(84, 84, 199)' }}/></Button>
-        :
+          variant="contained"
+          style={{
+            color: "rgb(225, 226, 230)",
+            backgroundColor: "rgb(56, 56, 73)",
+            marginBottom: "2rem",
+          }}
+          onClick={() => {
+            deleteSavedRoom(roomId);
+          }}
+        >
+          Hang Saved
+          <CheckBoxIcon
+            style={{ marginLeft: "1rem", color: "rgb(84, 84, 199)" }}
+          />
+        </Button>
+      ) : (
         <Button
-        variant='contained'
-        style={{
-          color: "rgb(225, 226, 230)",
-          backgroundColor: 'rgb(56, 56, 73)',
-          marginBottom: '2rem'
-        }}
-        onClick={() => {saveThisHang()}}
-        >Save This Hang</Button>}
-        <Box className={classes.participantsBox}>
-          <List component='ul' >
-          <Typography variant='h6' style={{ marginBottom: '1rem', color: 'rgb(225, 226, 230)', }}>Participants</Typography>
-          {participants.map(user => (
+          variant="contained"
+          style={{
+            color: "rgb(225, 226, 230)",
+            backgroundColor: "rgb(56, 56, 73)",
+            marginBottom: "2rem",
+          }}
+          onClick={() => {
+            saveThisHang();
+          }}
+        >
+          Save This Hang
+        </Button>
+      )}
+      <Box className={classes.participantsBox}>
+        <List component="ul">
+          <Typography
+            variant="h6"
+            style={{ marginBottom: "1rem", color: "rgb(225, 226, 230)" }}
+          >
+            Participants
+          </Typography>
+          {participants.map((user) => (
             <Box className={classes.participant}>
               <ListItem>
-                <ListItemText style={{ textAlign: 'center' }}>
-                  <Typography variant='body1'>{user}</Typography>
-                </ListItemText>           
+                <ListItemText style={{ textAlign: "center" }}>
+                  <Typography variant="body1">{user}</Typography>
+                </ListItemText>
               </ListItem>
             </Box>
           ))}
         </List>
-        </Box>
+      </Box>
     </Box>
   );
 };
-
 
 export default LeftRoomNav;

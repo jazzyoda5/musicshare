@@ -35,7 +35,7 @@ const Room = (props) => {
   const [participants, setParticipants] = useState([]);
   const [messages, setMessages] = useState([]);
   const [isRoomSaved, setIsRoomSaved] = useState(false);
-  
+  const [roomAccess, setRoomAccess] = useState(null);
   
   useEffect(() => {
     socket.current = new WebSocket(`${process.env.SOCKET_URL}/ws/room/${roomId}/`)
@@ -100,6 +100,7 @@ const Room = (props) => {
         setRoomCreator(content.room_creator);
         setParticipants(content.participants);
         setIsRoomSaved(content.is_room_saved);
+        setRoomAccess(content.room_access);
       }
     }
 
@@ -136,6 +137,7 @@ const Room = (props) => {
             username={username}
             isRoomSaved={isRoomSaved}
             setIsRoomSaved={setIsRoomSaved}
+            roomAccess={roomAccess}
           />
           <Chat sendMessage={sendMessage} messages={messages} />
         </Box>
