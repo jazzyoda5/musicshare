@@ -48,7 +48,7 @@ export const checkAuthenticated = () => async dispatch => {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
-        }
+        },
     };
 
     try {

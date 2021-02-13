@@ -3,7 +3,8 @@ from .views import (CreateUserView, GetCSRFToken,
 LoginView,
 LogoutView,
 CheckAuthenticated,
-LoadUserView)
+LoadUserView,
+FindUser)
 
 urlpatterns = [
     path('create/', CreateUserView.as_view()),
@@ -11,5 +12,6 @@ urlpatterns = [
     path('logout/', LogoutView.as_view()),
     path('authenticate/', CheckAuthenticated.as_view()),
     path('load_user/', LoadUserView.as_view()),
-    path('csrf_cookie/', GetCSRFToken.as_view())
+    path('csrf_cookie/', GetCSRFToken.as_view()),
+    path('finduser/', FindUser.as_view()),
 ]

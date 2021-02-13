@@ -7,6 +7,7 @@ import {
   Button,
   Typography,
   TextField,
+  Box
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import "./login_form.css";
@@ -18,7 +19,7 @@ import CSRFToken from '../../csrf_token';
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "block",
-    padding: "7vh",
+    padding: "2rem",
     paddingTop: '0'
   },
   title: {
@@ -58,7 +59,7 @@ const LoginForm = ({ login, isAuthenticated }) => {
   }
   
   return (
-    <div className="login-form">
+    <Box className='login-form'>
       <Button component={Link} to="/" 
       startIcon={<ArrowBackIcon style={{ fontSize: '3rem', 
       color: 'rgba(225, 226, 230, 0.4)', marginRight: '-0.7rem' }}/>}
@@ -111,7 +112,7 @@ const LoginForm = ({ login, isAuthenticated }) => {
           </Button>
         </form>
       </FormControl>
-    </div>
+    </Box>
   );
 }
 

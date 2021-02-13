@@ -1,11 +1,15 @@
 .home-div {
-    display: block;
-    width: 30rem;
-    height: 30rem;
-    max-width: 100vh;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+    width: 100vw;
+    height: 100vh;
+    max-width: 480px;
     max-height: 480px;
     margin: auto;
-    margin-top: 4rem;
+    margin: auto;
     text-align: center;
 
     background-color: rgb(71, 71, 88);

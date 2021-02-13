@@ -43,6 +43,7 @@ const useStyles = makeStyles({
     backgroundColor: "rgb(140, 140, 160)",
     borderRadius: "4px",
     height: "100%",
+    minHeight: '300px',
     width: "100%",
     alignItems: "center",
     borderStyle: 'solid',

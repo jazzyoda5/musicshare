@@ -3,7 +3,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useSelector } from 'react-redux'
 import { makeStyles } from "@material-ui/core/styles";
-import { Box } from '@material-ui/core';
+import { Box, Grid } from '@material-ui/core';
 import { Link, useRouteMatch, useHistory } from "react-router-dom";
 import CSRFToken from "../../csrf_token";
 import LeftRoomNav from './left_nav';
@@ -11,12 +11,11 @@ import Chat from './chat';
 import './room.css';
 
 const useStyles = makeStyles({
-  box: {
-    display: 'grid',
-    gridTemplateColumns: '30% 70%',
-    height: '100%',
-    maxWidth: '1000px',
-    margin: 'auto',
+  root: {
+    flexGrow: 1,
+    maxWidth: '1200px',
+    minHeight: '600px',
+    margin: 'auto'
   }
 });
 
@@ -130,8 +129,9 @@ const Room = (props) => {
   return (
     <div className="room">
         <CSRFToken />
-        <Box component="div" m={1} className={classes.box}>
-          <LeftRoomNav roomName={roomName}
+        <Grid container m={3} justify="center" className={classes.root}>
+          <Grid item sm={3} xs={12}>
+            <LeftRoomNav roomName={roomName}
             participants={participants}
             roomId={roomId}
             username={username}
@@ -139,8 +139,11 @@ const Room = (props) => {
             setIsRoomSaved={setIsRoomSaved}
             roomAccess={roomAccess}
           />
+          </Grid>
+          <Grid item sm={6} xs={12}>
           <Chat sendMessage={sendMessage} messages={messages} />
-        </Box>
+          </Grid>
+        </Grid>
         
     </div>
   );

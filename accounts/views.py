@@ -7,6 +7,7 @@ from django.contrib import auth
 from django.http import HttpResponse
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 from django.utils.decorators import method_decorator
+from django.db.models import Q
 
 
 @method_decorator(csrf_protect, name='dispatch')
@@ -87,6 +88,7 @@ class LogoutView(APIView):
 
 class LoadUserView(APIView):
     permission_classes = [permissions.IsAuthenticated, ]
+
     def get(self, request, format=None):
         user = self.request.user
         print('[LOADING USER] User: ', user)
@@ -110,3 +112,19 @@ class CheckAuthenticated(APIView):
                 return Response({ 'isAuthenticated': 'error' })
         except:
             return Response({ 'error': 'Something went wrong when checking authentication status' })
+
+
+class FindUser(APIView):
+    permission_classes = [permissions.IsAuthenticated, ]
+
+    def get(self, request, format=None):
+        username = request.query_params['username']
+
+        list_of_usernames = [] 
+        users = User.objects.filter(
+            Q(username__icontains=username)
+        )
+        for user in users:
+            list_of_usernames.append(user.username)
+
+        return Response({ 'success': 'success', 'users': list_of_usernames })
