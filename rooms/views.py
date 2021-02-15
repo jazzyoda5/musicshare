@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import CreateRoomSerializer, DeleteRoomSerializer
 from accounts.serializers import SaveRoomSerializer, DeleteSavedRoomSerializer
 from .models import Room
-from accounts.models import SavedRoom
+from accounts.models import SavedRoom, Invitation
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 from django.utils.decorators import method_decorator
 from django.contrib.auth.models import User
@@ -62,10 +62,22 @@ class GetYourRooms(views.APIView):
             dict1['room_name'] = room.name
             users_rooms_list.append(dict1)
 
+        invitations = Invitation.objects.filter(reciever=user)
+        invitations_list = []
+
+        for invite in invitations:
+            dict1 = {}
+            dict1['sender'] = invite.sender.username
+            dict1['room_name'] = invite.room.name
+            dict1['room_id'] = invite.room.room_id
+            dict1['invite_id'] = invite.id
+            invitations_list.append(dict1)
+
         response_data = {
             'success': 'Recieved room data.',
             'saved_rooms': saved_rooms_list,
-            'users_rooms': users_rooms_list
+            'users_rooms': users_rooms_list,
+            'invitations': invitations_list
         }
         return Response(response_data)
 
@@ -133,7 +145,7 @@ class DeleteSavedRoom(views.APIView):
         if serializer.is_valid():
             user = request.user
             room = Room.objects.get(room_id=serializer.data['room_id'])
-            sr_instance = SavedRoom.objects.get(room=room)
+            sr_instance = SavedRoom.objects.get(user=user, room=room)
 
             if user == sr_instance.user:
                 sr_instance.delete()

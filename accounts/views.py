@@ -8,6 +8,9 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 from django.utils.decorators import method_decorator
 from django.db.models import Q
+from .serializers import InviteToRoomSerializer, RespondToInviteSerializer
+from .models import Invitation, SavedRoom
+from rooms.models import Room, RoomAccessPermission
 
 
 @method_decorator(csrf_protect, name='dispatch')
@@ -124,7 +127,108 @@ class FindUser(APIView):
         users = User.objects.filter(
             Q(username__icontains=username)
         )
+        
         for user in users:
             list_of_usernames.append(user.username)
 
         return Response({ 'success': 'success', 'users': list_of_usernames })
+
+
+@method_decorator(csrf_protect, name='dispatch')
+class InviteToRoom(APIView):
+    permission_classes = [permissions.IsAuthenticated, ]
+    serializer_class = InviteToRoomSerializer
+
+    def post(self, request, format=None):
+        serializer = self.serializer_class(data=request.data)
+        sender = request.user
+
+        if serializer.is_valid():
+            username = serializer.data['username']
+
+            try: 
+                reciever = User.objects.get(username=username)
+            except User.DoesNotExist:
+                return Response({ 'error': 'User not found.' })
+            
+            try:
+                room = Room.objects.get(room_id=serializer.data['roomId'])
+            except Room.DoesNotExist:
+                return Response({ 'error': 'Room not found.' })
+
+            # If room is private, create permission for the reciever
+            # So that he can access the room if invited
+            if room.access == 'Private':
+                permission = RoomAccessPermission(user=reciever, room=room)
+                permission.save()
+
+            # Create an invitation instance
+            try:
+                invitation = Invitation(sender=sender, reciever=reciever, room=room)
+                invitation.save()
+            except:
+                return Response({ 'error': 'Something went wrong.' })
+
+            return Response({ 'success': 'success' })
+        
+        return Response({ 'error': 'Something went wrong.' })
+
+
+@method_decorator(csrf_protect, name='dispatch')
+class AcceptInviteToRoom(APIView):
+    permission_classes = [permissions.IsAuthenticated, ]
+    serializer_class = RespondToInviteSerializer
+
+    def post(self, request, format=None):
+        serializer = self.serializer_class(data=request.data)
+        user=request.user
+
+        if serializer.is_valid():
+            try:
+                invitation = Invitation.objects.get(id=serializer.data['invite_id'])
+                room = invitation.room
+                invitation.delete()
+
+            except Invitation.DoesNotExist:
+                return Response({ 'error': 'Invitation Does not exist.' })
+
+            # Save the room
+            sr_instance = SavedRoom(user=user, room=room)
+            sr_instance.save()
+
+            return Response({ 'success': 'success', 'room_id': room.room_id, 'room_name': room.name })
+        
+        return Response({ 'error': 'Something went wrong.' })
+
+
+@method_decorator(csrf_protect, name='dispatch')
+class DeclineInviteToRoom(APIView):
+    permission_classes = [permissions.IsAuthenticated, ]
+    serializer_class = RespondToInviteSerializer
+
+    def post(self, request, format=None):
+        serializer = self.serializer_class(data=request.data)
+        user=request.user
+
+        if serializer.is_valid():
+            try:
+                invitation = Invitation.objects.get(id=serializer.data['invite_id'])
+                room = invitation.room
+                
+            except Invitation.DoesNotExist:
+                return Response({ 'error': 'Invitation Does not exist.' })
+
+            # If room is private, delete access permission
+            if room.access == 'Private':
+                try:
+                    rap = RoomAccessPermission.objects.get(room=room, user=user)
+                    rap.delete()
+                except RoomAccessPermission.DoesNotExist:
+                    pass
+            
+            # Delete the invite
+            invitation.delete()
+
+            return Response({ 'success': 'success' })
+        
+        return Response({ 'error': 'Something went wrong.' })

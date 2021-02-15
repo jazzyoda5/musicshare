@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import InviteUserModal from "./invite_user_modal";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Box,
@@ -15,7 +16,6 @@ import Typography from "@material-ui/core/Typography";
 import List from "@material-ui/core/List";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import SearchIcon from '@material-ui/icons/Search';
 import Switch from "@material-ui/core/Switch";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -69,13 +69,13 @@ const useStyles = makeStyles({
     backgroundColor: "rgb(69, 69, 82)",
     outline: "none",
     justifyContent: "center",
-    textAlign: 'center',
-    padding: '2rem',
-    borderRadius: '2px'
+    textAlign: "center",
+    padding: "2rem",
+    borderRadius: "2px",
   },
   searchBar: {
     backgroundColor: "rgb(68, 68, 86)",
-    width: '100%',
+    width: "100%",
   },
 });
 
@@ -91,9 +91,6 @@ const LeftRoomNav = (props) => {
   } = props;
   const classes = useStyles();
   const [inviteUser, setInviteUser] = useState(false);
-  const [modalSearchBar, setModalSearchBar] = useState(null);
-  const [users, setUsers] = useState([]);
-
 
   const saveThisHang = async () => {
     console.log("Save this hang. -> ", roomId, username);
@@ -152,26 +149,6 @@ const LeftRoomNav = (props) => {
   const closeInviteModal = () => {
     setInviteUser(false);
   };
-
-  const searchForUsers = async () => {
-    const config = {
-      headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-      },
-      params: {
-        'username': modalSearchBar
-      }
-    };
-    const res = await axios.get(`${process.env.API_URL}/accounts/finduser`, config);
-
-    if (res.data.success) {
-      console.log(res.data.users);
-    }
-    else if (res.data.error) {
-      console.log(res.data.error);
-    }
-  }
 
   return (
     <Box component="div" className={classes.nav}>
@@ -240,54 +217,14 @@ const LeftRoomNav = (props) => {
               <PersonAddIcon />
             </IconButton>
             {inviteUser ? (
-              <Modal
-                open={inviteUser}
-                onClose={closeInviteModal}
-                aria-labelledby="invite-user-modal"
-                aria-describedby="invite-user-modal"
-              >
-                <Box className={classes.inviteUserModal}>
-                  <Box style={{ 
-                    display: 'flex',
-                    width: '100%'
-                  }}>
-                    <TextField
-                      className={classes.searchBar}
-                      id="search-bar"
-                      label="Search Username"
-                      variant="filled"
-                      onChange={e => setModalSearchBar(e.target.value)}
-                      InputProps={{ style: { color: 'white' }}}
-                      InputLabelProps={{
-                        style: { color: "rgb(225, 226, 230)" },
-                      }}
-                    />
-                    <IconButton
-                      onClick={() => searchForUsers()}
-                      variant='contained'
-                      style={{ color: "white", marginLeft: '1rem' }}
-                    >
-                      <SearchIcon />
-                    </IconButton>
-                    
-                  </Box>
-                  {(users) ?
-                    <List>
-                      {users.map(user => (
-                        <p>{user}</p>
-                      ))}
-                    </List>
-                    : null}
-                    {(users === null) ?
-                    <Typography variant='h6' style={{ 
-                      color: 'white',
-                      marginTop: '2rem'
-                    }}>No match found.</Typography> : null}
-                </Box>
-              </Modal>
+              <InviteUserModal
+                inviteUser={inviteUser}
+                openInviteModal={openInviteModal}
+                closeInviteModal={closeInviteModal}
+                roomId={roomId}
+              />
             ) : null}
           </Box>
-
           {participants.map((user) => (
             <Box className={classes.participant}>
               <ListItem>
