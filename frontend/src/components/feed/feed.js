@@ -20,6 +20,7 @@ const useStyles = makeStyles({
     marginBlock: "1rem",
     marginInline: "0.5rem",
     minHeight: "fit-content",
+    width: '100vw',
     maxWidth: 345,
     backgroundColor: "rgb(69, 69, 82)",
   },
@@ -141,7 +142,7 @@ const Feed = (props) => {
                 className={classes.text}
               >
                 Join one of the public hangs going on right now and meet new
-                people.
+                people. FEATURE NOT AVAILABLE!
               </Typography>
             </CardContent>
           </CardActionArea>
@@ -182,7 +183,7 @@ const Feed = (props) => {
                 className={classes.text}
               >
                 Search for people you may know or add friends you just met in a
-                hang.
+                hang. FEATURE NOT AVAILABLE!
               </Typography>
             </CardContent>
           </CardActionArea>
