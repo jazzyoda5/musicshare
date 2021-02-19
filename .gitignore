@@ -10,6 +10,7 @@
 /rooms/__pycache__
 /rooms/migrations
 *.sqlite3
+.DS_Store
 
 env.py
 todo.txt
