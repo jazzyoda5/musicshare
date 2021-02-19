@@ -6,7 +6,10 @@
 /musicapp/__pycache__
 /api/__pycache__
 /accounts/__pycache__
+/accounts/migrations
 /rooms/__pycache__
+/rooms/migrations
+*.sqlite3
 
 env.py
 todo.txt

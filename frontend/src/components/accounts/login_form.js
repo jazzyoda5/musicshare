@@ -1,26 +1,25 @@
 import React from "react";
 import { useState } from "react";
-import { Link, Redirect } from 'react-router-dom';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import { Link, Redirect } from "react-router-dom";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import {
   FormControl,
   Button,
   Typography,
   TextField,
-  Box
+  Box,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import "./login_form.css";
 import { connect } from "react-redux";
 import { login } from "../../actions/auth";
-import CSRFToken from '../../csrf_token';
-
+import CSRFToken from "../../csrf_token";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "block",
     padding: "2rem",
-    paddingTop: '0'
+    paddingTop: "0",
   },
   title: {
     color: "rgb(225, 226, 230)",
@@ -39,32 +38,41 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 const LoginForm = ({ login, isAuthenticated }) => {
   const classes = useStyles();
 
   const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
 
-  const onSubmit = event => {
+  const onSubmit = (event) => {
     event.preventDefault();
-    console.log('jakob1');
-    console.log('username ', username, 'password ', password);
+    console.log("jakob1");
+    console.log("username ", username, "password ", password);
     login(username, password);
-  }
+  };
 
   if (isAuthenticated) {
-    console.log('logged in. redirect to feed.');
-    return (<Redirect to='/feed' />)
+    console.log("logged in. redirect to feed.");
+    return <Redirect to="/feed" />;
   }
-  
+
   return (
-    <Box className='login-form'>
-      <Button component={Link} to="/" 
-      startIcon={<ArrowBackIcon style={{ fontSize: '3rem', 
-      color: 'rgba(225, 226, 230, 0.4)', marginRight: '-0.7rem' }}/>}
-      style={{ display: 'flex', width: 'fit-content', marginLeft: '1rem' }}></Button>
-      <FormControl onSubmit={e => onSubmit(e)}>
+    <Box className="login-form">
+      <Button
+        component={Link}
+        to="/"
+        startIcon={
+          <ArrowBackIcon
+            style={{
+              fontSize: "3rem",
+              color: "rgba(225, 226, 230, 0.4)",
+              marginRight: "-0.7rem",
+            }}
+          />
+        }
+        style={{ display: "flex", width: "fit-content", marginLeft: "1rem" }}
+      ></Button>
+      <FormControl onSubmit={(e) => onSubmit(e)}>
         <form className={classes.root} noValidate autoComplete="off">
           <CSRFToken />
           <div className="header">
@@ -82,7 +90,7 @@ const LoginForm = ({ login, isAuthenticated }) => {
             InputLabelProps={{
               style: { color: "rgb(225, 226, 230)" },
             }}
-            onChange={event => {
+            onChange={(event) => {
               setUsername(event.target.value);
             }}
           />
@@ -97,7 +105,7 @@ const LoginForm = ({ login, isAuthenticated }) => {
             InputLabelProps={{
               style: { color: "rgb(225, 226, 230)" },
             }}
-            onChange={event => {
+            onChange={(event) => {
               setPassword(event.target.value);
             }}
           />
@@ -114,12 +122,10 @@ const LoginForm = ({ login, isAuthenticated }) => {
       </FormControl>
     </Box>
   );
-}
+};
 
-
-const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
 });
-
 
 export default connect(mapStateToProps, { login })(LoginForm);
