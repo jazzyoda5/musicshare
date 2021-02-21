@@ -3,14 +3,20 @@
 /frontend/node_modules
 /frontend/__pycache__
 /frontend/migrations
+/frontend/webpack-config.js
 /musicapp/__pycache__
 /api/__pycache__
 /accounts/__pycache__
 /accounts/migrations
 /rooms/__pycache__
 /rooms/migrations
+/musicapp
 *.sqlite3
 .DS_Store
 
+
+README.md
+manage.py
 env.py
+requirements.txt
 todo.txt
