@@ -12,5 +12,6 @@
 *.sqlite3
 .DS_Store
 
+settings.ini
 env.py
 todo.txt
