@@ -4,6 +4,10 @@
 /frontend/__pycache__
 /frontend/migrations
 /musicapp/__pycache__
+/musicapp/settings.py
+/musicapp/asgi.py
+/frontend/webpack.config.js
+/frontend/static/frontend
 /api/__pycache__
 /accounts/__pycache__
 /accounts/migrations
