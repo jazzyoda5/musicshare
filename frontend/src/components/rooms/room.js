@@ -89,6 +89,12 @@ const Room = (props) => {
         console.log('[SOCKET] New user joined the room. -> ', new_user);
       }
 
+      else if ( type === 'user_left' ) {
+        let user = content;
+        setParticipants(participants.filter(participant => participant !== user));
+        console.log('[SOCKET] User left the room. -> ', user);
+      }
+
       else if ( type === 'access_error' ) {
         // Access to room denied
         history.push('/feed');

@@ -109,7 +109,7 @@ const Chat = (props) => {
       <Box
         style={{
           display: "flex",
-          backgroundColor: "rgb(69, 69, 82)",
+          backgroundColor: "rgb(93, 93, 109)",
           height: "100%",
         }}
       >

@@ -26,7 +26,7 @@ import { connect, useSelector } from "react-redux";
 
 const useStyles = makeStyles({
   nav: {
-    backgroundColor: "rgb(69, 69, 82)",
+    backgroundColor: "rgb(93, 93, 109)",
     borderRadius: "4px",
     height: "100%",
     width: "100%",
@@ -34,20 +34,30 @@ const useStyles = makeStyles({
     borderWidth: "1px",
     borderColor: "rgb(89, 89, 102)",
     borderRightColor: "rgba(0, 0, 0, 0)",
+    padding: 0,
+  },
+  topOfNav: {
+    padding: '1rem',
+    height: '30%'
   },
   title: {
     color: "rgb(225, 226, 230)",
-    margin: "1rem",
     padding: "1rem",
     borderRadius: "2px",
     backgroundColor: "rgb(46, 46, 63)",
     borderStyle: "solid",
     borderWidth: "1px",
     borderColor: "rgb(100, 100, 120)",
+    marginBottom: '0.5rem',
   },
-  participantsBox: {
+  participantsBoxParent: {
+    height: '70%',
+    margin: 0,
+    padding: '1rem',
+  },
+  participantsBoxChild: {
     backgroundColor: "rgb(46, 46, 63)",
-    margin: "1rem",
+    maxHeight: '80%',
     borderStyle: "solid",
     borderWidth: "1px",
     borderColor: "rgb(100, 100, 120)",
@@ -152,6 +162,7 @@ const LeftRoomNav = (props) => {
 
   return (
     <Box component="div" className={classes.nav}>
+      <Box className={classes.topOfNav}>
       {roomAccess === "Private" ? (
         <Typography
           variant="subtitle1"
@@ -169,7 +180,6 @@ const LeftRoomNav = (props) => {
           style={{
             color: "rgb(225, 226, 230)",
             backgroundColor: "rgb(56, 56, 73)",
-            marginBottom: "2rem",
           }}
           onClick={() => {
             deleteSavedRoom(roomId);
@@ -186,7 +196,6 @@ const LeftRoomNav = (props) => {
           style={{
             color: "rgb(225, 226, 230)",
             backgroundColor: "rgb(56, 56, 73)",
-            marginBottom: "2rem",
           }}
           onClick={() => {
             saveThisHang();
@@ -195,7 +204,9 @@ const LeftRoomNav = (props) => {
           Save This Hang
         </Button>
       )}
-      <Box className={classes.participantsBox}>
+      </Box>
+      <Box className={classes.participantsBoxParent}>
+        <Box className={classes.participantsBoxChild}>
         <List component="ul">
           <Box
             style={{
@@ -235,6 +246,7 @@ const LeftRoomNav = (props) => {
             </Box>
           ))}
         </List>
+        </Box>
       </Box>
     </Box>
   );

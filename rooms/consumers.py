@@ -66,6 +66,7 @@ class RoomConsumer(WebsocketConsumer):
         }))
 
         # Mark as active user in DB
+        # Make sure He is not marked active in this room more than once
         au_instance = ActiveUserPublic.objects.filter(user=user, room=room)
         print(len(au_instance))
 
@@ -96,6 +97,19 @@ class RoomConsumer(WebsocketConsumer):
         )
 
     def disconnect(self, close_code):
+        # Tell every user in the room that this user left
+        user = self.scope['user']
+        async_to_sync(self.channel_layer.group_send)(
+            self.room_group_name,
+            {
+                'type': 'chat_message',
+                'message': {
+                    'type': 'user_left',
+                    'content': str(user)
+                }
+            }
+        )
+
         # Leave room group
         async_to_sync(self.channel_layer.group_discard)(
             self.room_group_name,
