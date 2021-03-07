@@ -10,6 +10,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { Link } from "react-router-dom";
 import CreateRoomForm from './create_room.js';
+import PublicRooms from './public_hangs';
 
 const useStyles = makeStyles({
   root: {
@@ -39,18 +40,21 @@ const useStyles = makeStyles({
 const Feed = (props) => {
   const classes = useStyles();
   const [openNewRoomForm, setOpenNewRoomForm] = useState(false);
-  console.log(openNewRoomForm);
+  const [openPublicHangs, setOpenPublicHangs] = useState(false);
 
   const openCreateRoomForm = () => {
     setOpenNewRoomForm(true);
   }
-
-  const handleCreateRoom = (name, access) => {
-    console.log(name, access);
+  const openPublicHangsModal = () => {
+    setOpenPublicHangs(true);
   }
 
   const handleCreateRoomClose = () => {
-    setOpenNewRoomForm(false)
+    setOpenNewRoomForm(false);
+  }
+
+  const closePublicRoomsModal = () => {
+    setOpenPublicHangs(false);
   }
 
   return (
@@ -125,7 +129,7 @@ const Feed = (props) => {
           </CardActions>
         </Card>
         <Card className={classes.root}>
-          <CardActionArea>
+          <CardActionArea onClick={() => openPublicHangsModal()}>
             <CardContent>
               <Typography
                 gutterBottom
@@ -142,7 +146,7 @@ const Feed = (props) => {
                 className={classes.text}
               >
                 Join one of the public hangs going on right now and meet new
-                people. FEATURE NOT AVAILABLE!
+                people.
               </Typography>
             </CardContent>
           </CardActionArea>
@@ -152,57 +156,21 @@ const Feed = (props) => {
               variant="contained"
               color="primary"
               className={classes.button}
+              onClick={() => openPublicHangsModal()}
             >
               Find a hang
             </Button>
-            <Button
-              size="small"
-              variant="contained"
-              color="primary"
-              className={classes.button}
-            >
-              Saved hangs
-            </Button>
           </CardActions>
         </Card>        
-        <Card className={classes.root}>
-          <CardActionArea>
-            <CardContent>
-              <Typography
-                gutterBottom
-                variant="h5"
-                component="h2"
-                className={classes.text}
-              >
-                Find people
-              </Typography>
-              <Typography
-                variant="body2"
-                color="textSecondary"
-                component="p"
-                className={classes.text}
-              >
-                Search for people you may know or add friends you just met in a
-                hang. FEATURE NOT AVAILABLE!
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-          <CardActions>
-            <Button
-              size="small"
-              color="primary"
-              variant="contained"
-              className={classes.button}
-            >
-              Find friends
-            </Button>
-          </CardActions>
-        </Card>
       </div>
       <CreateRoomForm 
           open={openNewRoomForm} 
           handleCreateRoomClose={handleCreateRoomClose}
           />
+      <PublicRooms 
+        open={openPublicHangs}
+        handleClose={closePublicRoomsModal}
+      />
     </div>
   );
 };

@@ -118,6 +118,10 @@ const Room = (props) => {
 
   const sendMessage = ( message ) => {
     event.preventDefault();
+
+    // Do not send empty messages
+    if (message.length < 1) return;
+    
     if (socket.current) {
       socket.current.send(JSON.stringify({
         'message': {

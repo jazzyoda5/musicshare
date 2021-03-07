@@ -23,7 +23,7 @@ const useStyles = makeStyles({
   },
   messageContainer: {
     display: "flex",
-    minWidth: "12%",
+    minWidth: "20%",
     maxWidth: "60%",
     padding: "1rem",
     borderRadius: "7px",

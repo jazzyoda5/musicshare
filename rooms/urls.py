@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (CreateRoomView, GetYourRooms, SaveThisRoom,
-DeleteRoom, DeleteSavedRoom)
+DeleteRoom, DeleteSavedRoom, GetPublicRooms)
 
 
 urlpatterns = [
@@ -9,4 +9,5 @@ urlpatterns = [
     path('myhangs/', GetYourRooms.as_view()),
     path('deleteroom/', DeleteRoom.as_view()),
     path('deletesavedroom/', DeleteSavedRoom.as_view()),
+    path('getpublicrooms/', GetPublicRooms.as_view()),
 ]

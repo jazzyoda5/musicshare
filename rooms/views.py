@@ -157,3 +157,26 @@ class DeleteSavedRoom(views.APIView):
         return Response({ 'error': 'Something went wrong.' })
 
 
+# Get last 10 public rooms
+class GetPublicRooms(views.APIView):
+    permission_classes = [IsAuthenticated, ]
+
+    def get(self, request, format=None):
+
+        rooms = Room.objects.filter(access="Public").order_by("date_created")[:10]
+        data = []
+        print(rooms)
+        for room in rooms:
+            obj = {}
+            obj['name'] = room.name
+            obj['room_id'] = room.room_id
+            obj['creator'] = room.creator.username
+            data.append(obj)
+
+
+        return Response({
+            'success': 'Successful request.',
+            'rooms': data
+        })
+
+

@@ -42,7 +42,6 @@ export const load_user = () => async dispatch => {
 };
 
 export const checkAuthenticated = () => async dispatch => {
-    console.log('login action');
 
     const config = {
         headers: {
@@ -53,7 +52,6 @@ export const checkAuthenticated = () => async dispatch => {
 
     try {
         const res = await axios.get(`${process.env.API_URL}/accounts/authenticate/`, config);
-        console.log('res.data: ', res.data);
 
         if (res.data.error || res.data.isAuthenticated === 'error') {
             dispatch({

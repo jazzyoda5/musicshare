@@ -49,7 +49,7 @@ const useStyles = makeStyles({
     },
   },
   container: {
-    backgroundColor: "rgb(101, 101, 118)",
+    backgroundColor: "rgb(80, 80, 95)",
     color: "white",
   },
 });
@@ -99,7 +99,7 @@ const CreateRoomForm = (props) => {
         <DialogTitle id="form-dialog-title" className={classes.container}>
           Create a room
         </DialogTitle>
-        <DialogContent style={{ backgroundColor: "rgb(101, 101, 118)" }}>
+        <DialogContent style={{ backgroundColor: "rgb(80, 80, 95)" }}>
           <FormControl style={{ width: "100%" }}>
             <form noValidate autoComplete="off">
               <CSRFToken />
